@@ -27,7 +27,7 @@ def Normalizacion(Tipo,Ws_menos,Wp_menos,Ws_mas=0,Wp_mas=0):
                 Wp_mas=Wp
                 Nor[Tipo]=( (Ws_mas-Ws_menos) / (Wp_mas-Wp_menos) )
             else:
-                print("Error:No se puedo realizar la simetria del Rechaz-banda")
+                print("Error:No se puedo realizar la simetria del Rechaza-banda")
     Ws_Nor=Nor[Tipo]
     Wp_Nor=1
     return Wp_Nor,Ws_Nor
