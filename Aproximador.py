@@ -7,12 +7,9 @@ from butterworth import butterworth
 
 class AproximadorFiltro:
     #Defino el constructor de la clase en el que creo las variables a usar
-    def _init_(self):
-        self.Polos=[]
-        self.Zeros=[]
-        self.Num=[]
-        self.Den=[]
-    #Le pamos los datos necesarios para la aproximacion
+    #def _init_(self):
+
+    #Le damos los datos necesarios para la aproximacion
     def Datos(self,Tipo,Ap,As,Wp,Ws,Wp_mas=0,Ws_mas=0,Porcentaje=0,Qmax=0,N=0,Nmin=0,Nmax=0):
         self.Tipo=Tipo
         self.Ws=Ws
@@ -28,6 +25,9 @@ class AproximadorFiltro:
         self.Porcentaje=Porcentaje
     #Se encarga de realizar la aproximacion dado los datos recibidos
     def Aproximacion(self):
+        #Variables a utilizar
+        Polos=[]
+        Ceros=[]
         #Primero garantizo el tipo de filtro que quiero
         if self.Wp_mas == 0:
             if self.Wp < self.Ws:
@@ -36,22 +36,27 @@ class AproximadorFiltro:
                 Filtro="high-pass"
         else:
             if self.Wp < self.Ws:
-                Filtro="bandwidth-pass"
+                Filtro="band-pass"
             else:
-                Filtro='Reject-band'
+                Filtro='band-stop'
         #Una vez que ya tengo el tipo de filtro procedo a normalizarlo
         Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas)
         print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         if self.Tipo=="Butterworth":
             print("Butter")
         elif self.Tipo=="Chebyshev I":
-            self.N,self.Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax)
+            self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax)
             for i in range(self.N):
-                print("Polo",i,"=",self.Polos[i])
+                print("Polo",i,"=",Polos[i])
         elif self.Tipo=="Chebyshev II":
             print("Cheby II")
         else:
             print("Bessel")
+        #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
+        Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
+        print("Los numeradoes son",Num)
+        print("Los denominadores son",Den)
+        print("La constante es",self.Const)
 
 
 def main():
