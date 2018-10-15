@@ -20,5 +20,4 @@ def butterworth(Ap,wp,Aa,wa):
         a = cmath.rect(radio, phase_ini + k*ang)
         polos.append(round(re(a),6) + I*round(im(a),6))
         print("polo = ",polos[k],"\n")
-
     return ceros,polos
