@@ -31,7 +31,7 @@ def Chebyshev_Epsilon(Ap):
     Epsilon=math.sqrt(10**(Ap/10)-1)
     return Epsilon
 #Obtenemos la aproximacion normalizada
-def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
+def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
     if N ==0 :
         N=Chebyshev_Order(As,Ap,Ws,Wp)
         if Nmin !=0 & Nmax !=0:
@@ -39,7 +39,12 @@ def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
                 N=Nmin
             elif N > Nmax:
                 N=Nmax 
-    e=Chebyshev_Epsilon(Ap)
+    if(Porcentaje == 0):
+        e=Chebyshev_Epsilon(Ap)
+    else:
+        e1=Chebyshev_Epsilon(Ap)
+        e2=Chebyshev_Epsilon(As)/(math.cosh(N*math.acosh(Ws)))
+        e=e1+(Porcentaje/100)*(e2-e1)
     print("Epsilos=",e)
     P=Chebyshev_Polos(N,e)
     """ Ahora vamos a calcular la constante que se le multiplica 
