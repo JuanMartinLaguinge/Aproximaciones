@@ -1,6 +1,8 @@
-def butterworth(Ap,wp,Aa,wa,wp_mas=0,wa_mas=0):
-    #las variables wp_mas y ws_mas son para hacer bandas
-    wan = normalizacion(wp,wa,wp_mas,wa_mas) #ya tenemos el wan, todo normalizado
+import math
+import cmath
+from sympy import *
+
+def butterworth(Ap,wp,Aa,wa):
     E = sqrt(10**(Ap/10) - 1)
     #print("E = ",E,"\n")
     n = math.log10(sqrt(10**(Aa/10 - 1)) / E) / math.log10(wan)
