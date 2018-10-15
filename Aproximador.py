@@ -54,7 +54,7 @@ class AproximadorFiltro:
             print("Bessel")
         #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
         Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
-        print("Los numeradoes son",Num)
+        print("Los numeradoes son",Num*self.Const)
         print("Los denominadores son",Den)
         print("La constante es",self.Const)
 

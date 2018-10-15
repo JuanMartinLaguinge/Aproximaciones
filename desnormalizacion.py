@@ -11,13 +11,11 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1):
         den = den*(s-polos[k])  #tenemos el denominador de la funcion transf norm
     num = expand(num).subs(I,0)
     den = expand(den).subs(I,0)
-    print("\n\nnumerador",num,"\n   denominador",den)
     H_nor = num/den
     k = H_nor.subs(s,0) #k es la constante que queda mutiplicando al H en formato normalizado
     H_nor = H_nor/k*const     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
     if(tipo == 'low-pass'):
         H_denor = H_nor.subs(s,s/wp)
-        print("\n\ndenormalizada: ",H_denor)
     elif(tipo == 'high-pass'):
         H_denor = H_nor.subs(s,wp/s)
     elif(tipo == 'band-pass'):
@@ -46,7 +44,6 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1):
         den_coeffs = float(den)
     else:
         den_pol = Poly(den.subs(I,0))          #mando la parte imaginaria a 0 porque python tiene problemas
-        #print("den: ",den,"\n")
         den_coeffs = den_pol.all_coeffs()       #y como son conjugados los polos la parte imaginaria tiene que ser 0
                                                 #cuando se expande la expresion
     return num_coeffs,den_coeffs

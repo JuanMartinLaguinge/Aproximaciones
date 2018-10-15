@@ -49,7 +49,10 @@ def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
         #Si es mas chico que 1*10**(-10) entonces es aproximadamente 0
         if(P[i].imag < 1e-10 and P[i].imag>0) or (P[i].imag > -1e-10 and P[i].imag<0):
             P[i]-=P[i].imag*1j
-        K*=P[i]
-    K*=1/math.sqrt(1+ (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )
-    K=K.real
+    #La desnormalizacion asegura que la funcion tranferencia no vaya a dar
+    # un valor deferente de 1 en s=0 pero eso no alcanza para cheby dado que
+    # tambien necesito que sea igual a la normalizado con lo cual calculo el
+    #valor de donde empezaria en cheby y se lo multiplico al valor que hace que
+    #cuando lo calcules por polos esta funcion no se vaya del 1
+    K=1/math.sqrt(1+ (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )
     return N,P,K
