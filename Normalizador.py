@@ -4,9 +4,9 @@ def Normalizacion(Tipo,Ws_menos,Wp_menos,Ws_mas=0,Wp_mas=0):
     Nor={ 'low-pass': (Ws_menos/Wp_menos), 
     'high-pass': (Wp_menos/Ws_menos), 
     'bandwidth-pass': ( (Ws_mas-Ws_menos) / (Wp_mas-Wp_menos) ),
-    'Rechaza-banda': ( (Wp_mas-Wp_menos) / (Ws_mas-Ws_menos) )}
+    'Reject-band': ( (Wp_mas-Wp_menos) / (Ws_mas-Ws_menos) )}
     if( Ws_menos*Ws_mas != Wp_mas*Wp_menos ):
-        if Tipo=='Pasa-banda':
+        if Tipo=='bandwidth-pass':
             Ws=Wp_mas*Wp_menos/Ws_mas
             if Ws_menos<Ws:
                 Ws_menos=Ws
