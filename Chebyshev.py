@@ -18,7 +18,7 @@ def Chebyshev_Order(As,Ap,Ws,Wp):
 #Se encarga de devolver los polos 
 def Chebyshev_Polos(N,e):
     Polos = []
-    Re_cte=-math.sinh((1/N)*math.asinh(1/e))
+    Re_cte=math.sinh((1/N)*math.asinh(1/e))
     Im_cte=math.cosh((1/N)*math.asinh(1/e))
     for i in range(N):
         Polos_Re=Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 

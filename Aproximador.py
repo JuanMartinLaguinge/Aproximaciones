@@ -10,6 +10,8 @@ class AproximadorFiltro:
     def _init_(self):
         self.Polos=[]
         self.Zeros=[]
+        self.Num=[]
+        self.Den=[]
     #Le pamos los datos necesarios para la aproximacion
     def Datos(self,Tipo,Ap,As,Wp,Ws,Wp_mas=0,Ws_mas=0,Porcentaje=0,Qmax=0,N=0,Nmin=0,Nmax=0):
         self.Tipo=Tipo
@@ -43,7 +45,9 @@ class AproximadorFiltro:
         if self.Tipo=="Butterworth":
             print("Butter")
         elif self.Tipo=="Chebyshev I":
-            print("Cheby1")
+            self.N,self.Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax)
+            for i in range(self.N):
+                print("Polo",i,"=",self.Polos[i])
         elif self.Tipo=="Chebyshev II":
             print("Cheby II")
         else:
@@ -52,7 +56,7 @@ class AproximadorFiltro:
 
 def main():
     Aprox=AproximadorFiltro()
-    Aprox.Datos("Butterworth",2,4,1e03,1.2e03)
+    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03)
     Aprox.Aproximacion()
 
 #Es necesario para poder ejecutar una funcion dentro del archivo
