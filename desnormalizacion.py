@@ -1,3 +1,6 @@
+from sympy import *
+from math import *
+
 def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0):
     s = Symbol('s')
     num = 1
@@ -6,11 +9,9 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0):
         num = num*(s-ceros[k])  #tenemos el numerador de la funcion transf norm
     for k in range (0,len(polos)):
         den = den*(s-polos[k])  #tenemos el denominador de la funcion transf norm
-    #print("numerador",num,"   denomunador ",den)
     H_nor = num/den
     if(tipo == 'low-pass'):
         H_denor = H_nor.subs(s,s/wp)
-        #print("entre")
     elif(tipo == 'high-pass'):
         H_denor = H_nor.subs(s,wp/s)
     elif(tipo == 'pass-band'):
