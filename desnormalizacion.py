@@ -1,7 +1,7 @@
 from math import *
 from sympy import *
 
-def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0):
+def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1):
     s = Symbol('s')
     num = 1
     den = 1
@@ -11,19 +11,19 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0):
         den = den*(s-polos[k])  #tenemos el denominador de la funcion transf norm
     num = expand(num).subs(I,0)
     den = expand(den).subs(I,0)
-    #print("\n\nnumerador",num,"\n   denominador",den)
+    print("\n\nnumerador",num,"\n   denominador",den)
     H_nor = num/den
     k = H_nor.subs(s,0) #k es la constante que queda mutiplicando al H en formato normalizado
-    H_nor = H_nor/k     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
+    H_nor = H_nor/k*const     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
     if(tipo == 'low-pass'):
         H_denor = H_nor.subs(s,s/wp)
-        #print("\n\ndenormalizada: ",H_denor)
+        print("\n\ndenormalizada: ",H_denor)
     elif(tipo == 'high-pass'):
         H_denor = H_nor.subs(s,wp/s)
     elif(tipo == 'band-pass'):
         wo = sqrt(wp*wp_mas)
         B = (wp_mas - wp)/wo
-        #print("wo = ",wo,"\nB = ",B)
+        print("wo = ",wo,"\nB = ",B)
         H_denor = H_nor.subs(s,1/B * (s/wo + wo/s))
     elif(tipo == 'band-stop'):
         wo = sqrt(wp*wp_mas)
