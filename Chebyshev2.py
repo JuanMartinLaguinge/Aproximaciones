@@ -1,7 +1,6 @@
 import math
-
 #Funcion que se enarga de encontrar el orden correcto de la aproximación
-def Chebyshev_Order(As,Ap,Ws,Wp):
+def Chebyshev2_Order(As,Ap,Ws,Wp):
     N_Up=math.acosh(math.sqrt((10**(As/10)-1)/(10**(Ap/10)-1)))
     N_Down=math.acosh(Ws/Wp)
     N_Order=N_Up/N_Down
@@ -15,33 +14,44 @@ def Chebyshev_Order(As,Ap,Ws,Wp):
         N_Temp=N_Order-N_Temp
         N= int(N_Order+1-N_Temp)
     return N
-#Se encarga de devolver los polos 
-def Chebyshev_Polos(N,e):
-    Polos = []
-    Re_cte=-math.sinh((1/N)*math.asinh(1/e))
-    Im_cte=math.cosh((1/N)*math.asinh(1/e))
-    for i in range(N):
-        Polos_Re=Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 
-        Polos_Im= Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) )
-        Polos.append(Polos_Re+1j*Polos_Im)
-    return Polos
 
 #Se encontrar el epsilon
-def Chebyshev_Epsilon(Ap):
-    Epsilon=math.sqrt(10**(Ap/10)-1)
+def Chebyshev2_Epsilon(As):
+    Epsilon=1/math.sqrt(10**(As/10)-1)
     return Epsilon
-#Obtenemos la aproximacion normalizada
-def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
+
+#Se encarga de devolver los polos
+def Chebyshev2_CerosYPolos(N,e):
+    Re_cte=-math.sinh((1/N)*math.asinh(1/e))
+    Im_cte=math.cosh((1/N)*math.asinh(1/e))
+    Polos = []
+    for i in range(N):
+        Polos_ReTemp= Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 
+        Polos_ImTemp= Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 
+        Polos_Re = Polos_ReTemp/(Polos_ReTemp**2 + Polos_ImTemp**2)
+        Polos_Im = -Polos_ImTemp/(Polos_ReTemp**2 + Polos_ImTemp**2)
+        Polos.append(Polos_Re+1j*Polos_Im)
+    #Ahora calculo los ceros y estos solo poseen parte imaginaria
+    Zeros = []
+    if N % 2 == 0:
+        RangoZ=N//2
+    else:
+        RangoZ=N//2+N%2
+    for i in range(RangoZ):
+        Zeros.append( 1j/math.cos( (math.pi)*(2*i+1) / (2*N) ) )
+    return Polos,Zeros
+
+def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
     if N ==0 :
-        N=Chebyshev_Order(As,Ap,Ws,Wp)
+        N=Chebyshev2_Order(As,Ap,Ws,Wp)
         if Nmin !=0 & Nmax !=0:
             if Nmin > N:
                 N=Nmin
             elif N > Nmax:
                 N=Nmax 
-    e=Chebyshev_Epsilon(Ap)
+    e=Chebyshev2_Epsilon(As)
     print("Epsilos=",e)
-    P=Chebyshev_Polos(N,e)
+    P,Zeros=Chebyshev2_CerosYPolos(N,e)
     """ Ahora vamos a calcular la constante que se le multiplica 
     a la funcion tranferencia cuando la obtenemos por polos"""
     K=(-1)**N
@@ -50,6 +60,5 @@ def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
         if(P[i].imag < 1e-10 and P[i].imag>0) or (P[i].imag > -1e-10 and P[i].imag<0):
             P[i]-=P[i].imag*1j
         K*=P[i]
-    K*=1/math.sqrt(1+ (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )
     K=K.real
-    return N,P,K
+    return N,P,Zeros,K
