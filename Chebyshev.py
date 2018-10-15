@@ -49,7 +49,6 @@ def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
     P=Chebyshev_Polos(N,e)
     """ Ahora vamos a calcular la constante que se le multiplica 
     a la funcion tranferencia cuando la obtenemos por polos"""
-    K=(-1)**N
     for i in range(N):
         #Si es mas chico que 1*10**(-10) entonces es aproximadamente 0
         if(P[i].imag < 1e-10 and P[i].imag>0) or (P[i].imag > -1e-10 and P[i].imag<0):
