@@ -41,7 +41,7 @@ def Chebyshev2_CerosYPolos(N,e):
         Zeros.append( 1j/math.cos( (math.pi)*(2*i+1) / (2*N) ) )
     return Polos,Zeros
 
-def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
+def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
     if N ==0 :
         N=Chebyshev2_Order(As,Ap,Ws,Wp)
         if Nmin !=0 & Nmax !=0:
@@ -49,16 +49,24 @@ def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
                 N=Nmin
             elif N > Nmax:
                 N=Nmax 
-    e=Chebyshev2_Epsilon(As)
+    if(Porcentaje == 0):
+        e=Chebyshev2_Epsilon(Ap)*(1/math.cos(N*math.acos(1/Wp)))
+    else:
+        e1=Chebyshev2_Epsilon(Ap)*(1/math.cos(N*math.acos(1/Wp)))
+        e2=Chebyshev2_Epsilon(As)
+        e=e1+(Porcentaje/100)*(e2-e1)
     print("Epsilos=",e)
     P,Zeros=Chebyshev2_CerosYPolos(N,e)
     """ Ahora vamos a calcular la constante que se le multiplica 
     a la funcion tranferencia cuando la obtenemos por polos"""
-    K=(-1)**N
     for i in range(N):
         #Si es mas chico que 1*10**(-10) entonces es aproximadamente 0
         if(P[i].imag < 1e-10 and P[i].imag>0) or (P[i].imag > -1e-10 and P[i].imag<0):
             P[i]-=P[i].imag*1j
-        K*=P[i]
-    K=K.real
+     #La desnormalizacion asegura que la funcion tranferencia no vaya a dar
+    # un valor deferente de 1 en s=0 pero eso no alcanza para cheby dado que
+    # tambien necesito que sea igual a la normalizado con lo cual calculo el
+    #valor de donde empezaria en cheby y se lo multiplico al valor que hace que
+    #cuando lo calcules por polos esta funcion no se vaya del 1
+    K=math.sqrt( (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )/math.sqrt(1+ (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )
     return N,P,Zeros,K
