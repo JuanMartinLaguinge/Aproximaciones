@@ -28,6 +28,7 @@ class AproximadorFiltro:
         #Variables a utilizar
         Polos=[]
         Ceros=[]
+        self.Const=1
         #Primero garantizo el tipo de filtro que quiero
         if self.Wp_mas == 0:
             if self.Wp < self.Ws:
@@ -43,9 +44,9 @@ class AproximadorFiltro:
         Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas)
         print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         if self.Tipo=="Butterworth":
-            print("Butter")
+            Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
         elif self.Tipo=="Chebyshev I":
-            self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax)
+            self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             for i in range(self.N):
                 print("Polo",i,"=",Polos[i])
         elif self.Tipo=="Chebyshev II":
