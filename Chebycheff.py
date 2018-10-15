@@ -53,16 +53,3 @@ def Chebyshev_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
     K*=1/math.sqrt(1+ (e**2) * ( (math.cos( N* math.acos(0) ))**2 ) )
     K=K.real
     return N,P,K
-
-def main():
-    #print("Favor de mandar los valores en el siguiente orden:")
-    #print("As,Ap,Ws,Wp")
-    N,Polos,K=Chebyshev_Aprox(3,1,1.2,1)
-    print("Orden =",N)
-    for i in range(N):
-        print("Polo",i,"=",Polos[i])
-    print("Constante para la funcion tranferencia",K)
-    
-#Es necesario para poder ejecutar una funcion dentro del archivo
-if __name__ == "__main__":
-    main()

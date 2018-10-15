@@ -31,13 +31,3 @@ def Normalizacion(Tipo,Ws_menos,Wp_menos,Ws_mas=0,Wp_mas=0):
     Ws_Nor=Nor[Tipo]
     Wp_Nor=1
     return Wp_Nor,Ws_Nor
-
-def main():
-    #print("Favor de mandar los valores en el siguiente orden:")
-    #print("As,Ap,Ws,Wp")bajos
-    Wpn,Wan=Normalizacion('Pasa-banda',2e03,1e03,1)
-    print("Normalizate, El valor de Wpn es",Wpn,"y el de Wan es",Wan)
-   
-#Es necesario para poder ejecutar una funcion dentro del archivo
-if __name__ == "__main__":
-    main()

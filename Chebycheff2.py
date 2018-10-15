@@ -62,17 +62,3 @@ def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0):
         K*=P[i]
     K=K.real
     return N,P,Zeros,K
-
-def main():
-    #print("Favor de mandar los valores en el siguiente orden:")
-    #print("As,Ap,Ws,Wp")
-    N,Polos,Zeros,K=Chebyshev2_Aprox(18,0.25,140000,100000)
-    print("Orden =",N)
-    for i in range(N):
-         print("Polo",i,"=",Polos[i])
-    for i in range(len(Zeros)):
-         print("Zero",i,"=0+i",Zeros[i])
-    print("Constante para la funcion tranferencia",K)
-
-if __name__ == "__main__":
-    main()
