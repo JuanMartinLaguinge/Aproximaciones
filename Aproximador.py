@@ -45,19 +45,28 @@ class AproximadorFiltro:
         print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         if self.Tipo=="Butterworth":
             Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+            self.Const=1
         elif self.Tipo=="Chebyshev I":
             self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-            for i in range(self.N):
-                print("Polo",i,"=",Polos[i])
         elif self.Tipo=="Chebyshev II":
-            print("Cheby II")
+            self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
         else:
             print("Bessel")
+        #Chequeo
+        for i in range(len(Polos)):
+                print("Polo",i,"=",Polos[i])
+        for i in range(len(Ceros)):
+                print("Cero",i,"=",Ceros[i])
+        print("La constante es",self.Const)
         #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
         Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
+        if type(Num) != float:
+            for i in range(len(Num)):
+                Num[i]=Num[i]*self.Const
+        else:
+            Num*=self.Const
         print("Los numeradoes son",Num*self.Const)
         print("Los denominadores son",Den)
-        print("La constante es",self.Const)
 
 
 def main():
