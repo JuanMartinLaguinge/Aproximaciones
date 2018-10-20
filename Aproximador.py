@@ -30,7 +30,7 @@ class AproximadorFiltro:
         #Variables a utilizar
         Polos=[]
         Ceros=[]
-        Ok=False
+        OK=False
         self.Const=1
         #Primero garantizo el tipo de filtro que quiero
         if self.Wp_mas == 0:
@@ -96,9 +96,8 @@ class AproximadorFiltro:
 
 def main():
     Aprox=AproximadorFiltro()
-    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03)
+    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,0.5,0,0,0)
     Aprox.Aproximacion()
-
 #Es necesario para poder ejecutar una funcion dentro del archivo
 if __name__ == "__main__":
     main()
