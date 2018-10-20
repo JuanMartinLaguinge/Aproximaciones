@@ -30,7 +30,7 @@ def Chebyshev2_CerosYPolos(N,e):
         Polos_ImTemp= Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 
         Polos_Re = Polos_ReTemp/(Polos_ReTemp**2 + Polos_ImTemp**2)
         Polos_Im = -Polos_ImTemp/(Polos_ReTemp**2 + Polos_ImTemp**2)
-        Polos.append(Polos_Re+1j*Polos_Im)
+        Polos.append(round(Polos_Re,6) + 1j*round(Polos_Im,6) )
     #Ahora calculo los ceros y estos solo poseen parte imaginaria
     Zeros = []
     if N % 2 == 0:
@@ -38,7 +38,7 @@ def Chebyshev2_CerosYPolos(N,e):
     else:
         RangoZ=N//2+N%2
     for i in range(RangoZ):
-        Zeros.append( 1j/math.cos( (math.pi)*(2*i+1) / (2*N) ) )
+        Zeros.append( 1j*round (1/math.cos( (math.pi)*(2*i+1) / (2*N) ) ) )
     return Polos,Zeros
 
 def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):

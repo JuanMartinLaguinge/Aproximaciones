@@ -21,8 +21,8 @@ def Chebyshev_Polos(N,e):
     Re_cte=math.sinh((1/N)*math.asinh(1/e))
     Im_cte=math.cosh((1/N)*math.asinh(1/e))
     for i in range(N):
-        Polos_Re=Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) 
-        Polos_Im= Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) )
+        Polos_Re= round( Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) ,6)
+        Polos_Im= round( Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) ,6)
         Polos.append(Polos_Re+1j*Polos_Im)
     return Polos
 
