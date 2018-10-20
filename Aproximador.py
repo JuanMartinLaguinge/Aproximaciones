@@ -67,6 +67,14 @@ class AproximadorFiltro:
             Num*=self.Const
         print("Los numeradoes son",Num*self.Const)
         print("Los denominadores son",Den)
+        #Al final chequeamos que cumpla con la condicion del Qmax dado de haber dado uno
+        #Para eso primero eliminamos los elementos anteriores de las listas
+        Ceros.clear()
+        Polos.clear()
+        '''Devolvemos el valor de forma tal que el primer numero del arreglo de los 
+        cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
+        del primer elemento al ultimo'''
+        #return Num,Den
 
 
 def main():
