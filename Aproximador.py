@@ -30,6 +30,8 @@ class AproximadorFiltro:
         #Variables a utilizar
         Polos=[]
         Ceros=[]
+        Q_Polos=[]
+        Q_Ceros=[]
         OK=False
         self.Const=1
         #Primero garantizo el tipo de filtro que quiero
@@ -84,12 +86,20 @@ class AproximadorFiltro:
         print("La constante es",self.Const)
         #Ahora calculo el Q para ver que cumpla con la condicion del Qmax
         if self.Qmax != 0:
-            print("Necesitamos usar Q")
+            for i in range(len(Polos)):
+                Q_Polos.append( abs( Polos[i] ) / (2*(Polos[i].real) ) )
+            for i in range(len(Ceros)):
+                Q_Ceros.append( abs( Ceros[i] ) / (2*(Ceros[i].real) ) )
         else:
             OK=True
         '''Devolvemos el valor de forma tal que el primer numero del arreglo de los 
         cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
         del primer elemento al ultimo'''
+         #Chequeo
+        for i in range(len(Polos)):                
+            print("QPolo",i,"=",Q_Polos[i])
+        for i in range(len(Ceros)):
+            print("QCero",i,"=",Q_Ceros[i])
         print("Valor del flag",OK)
         #return Num,Den
 
