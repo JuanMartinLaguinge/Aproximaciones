@@ -5,6 +5,7 @@ from Chebyshev import Chebyshev_Aprox
 from Chebyshev2 import Chebyshev2_Aprox
 from butterworth import butterworth
 import scipy
+import numpy
 
 class AproximadorFiltro:
     #Defino el constructor de la clase en el que creo las variables a usar
@@ -30,8 +31,6 @@ class AproximadorFiltro:
         #Variables a utilizar
         Polos=[]
         Ceros=[]
-        Q_Polos=[]
-        Q_Ceros=[]
         OK=False
         self.Const=1
         #Primero garantizo el tipo de filtro que quiero
@@ -48,65 +47,94 @@ class AproximadorFiltro:
         #Una vez que ya tengo el tipo de filtro procedo a normalizarlo
         Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas)
         #print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
-        if self.Tipo=="Butterworth":
-            Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-            self.Const=1
-        elif self.Tipo=="Chebyshev I":
-            self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-        elif self.Tipo=="Chebyshev II":
-            self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-        else:
-            print("Bessel")
-        '''#Chequeo
-        for i in range(len(Polos)):
-            print("Polo",i,"=",Polos[i])
-        for i in range(len(Ceros)):
-            print("Cero",i,"=",Ceros[i])
-        print("La constante es",self.Const)'''
-        #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
-        Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
-        if type(Num) != float:
-            for i in range(len(Num)):
-                Num[i]=Num[i]*self.Const
-        else:
-            Num*=self.Const
-        print("Los numeradoes son",Num*self.Const)
-        print("Los denominadores son",Den)
-        #Al final chequeamos que cumpla con la condicion del Qmax dado de haber dado uno
-        #Para eso primero eliminamos los elementos anteriores de las listas
-        Ceros.clear()
-        Polos.clear()
-        Ceros= scipy.roots(Num)
-        Polos= scipy.roots(Den)
-        #Chequeo
-        for i in range(len(Polos)):                
-            print("Polo",i,"=",Polos[i])
-        for i in range(len(Ceros)):
-            print("Cero",i,"=",Ceros[i])
-        print("La constante es",self.Const)
-        #Ahora calculo el Q para ver que cumpla con la condicion del Qmax
-        if self.Qmax != 0:
+        while OK == False:
+            if self.Tipo=="Butterworth":
+                Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+                self.Const=1
+            elif self.Tipo=="Chebyshev I":
+                self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+            elif self.Tipo=="Chebyshev II":
+                self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+            else:
+                print("Bessel")
+            '''#Chequeo
             for i in range(len(Polos)):
-                Q_Polos.append( abs( Polos[i] ) / (2*(Polos[i].real) ) )
+                print("Polo",i,"=",Polos[i])
             for i in range(len(Ceros)):
-                Q_Ceros.append( abs( Ceros[i] ) / (2*(Ceros[i].real) ) )
-        else:
-            OK=True
+                print("Cero",i,"=",Ceros[i])
+            print("La constante es",self.Const)'''
+            #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
+            Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
+            if type(Num) != float:
+                for i in range(len(Num)):
+                    Num[i]=Num[i]*self.Const
+            else:
+                Num*=self.Const
+            #Al final chequeamos que cumpla con la condicion del Qmax dado de haber dado uno
+            #Para eso primero eliminamos los elementos anteriores de las listas
+            if type(Ceros) == list :
+                Ceros.clear()
+            if type(Polos) == list :
+                Polos.clear()
+            Ceros= scipy.roots(Num)
+            Polos= scipy.roots(Den)
+            #Ahora calculo el Q para ver que cumpla con la condicion del Qmax
+            if self.Qmax != 0:
+                for i in range(len(Polos)):
+                    Q_Polos= abs( Polos[i] ) / (2*(Polos[i].real) )
+                    #Chequeo            
+                    print("QPolo",i,"=",Q_Polos)
+                    #Chequeo
+                    if Q_Polos > self.Qmax :
+                        if self.N > 1:
+                            self.N=self.N-1
+                        #Cheque que no se pueda hacer lo imposible que es realizar una aproximacion de orden menor a 1
+                        else:
+                            OK= True
+                            print("No se puedo realizar una aproximacion con el Q pedido")
+                        break
+                    '''Chequeo si hay algun cero, dado que si no hay entonces ya no hay más Q que calcular'''
+                    if ( len(Ceros) == 0 ) and ( (i+1) == len(Polos)) :
+                        OK= True
+                for i in range(len(Ceros)):
+                    Q_Ceros= abs( Ceros[i] ) / (2*(Ceros[i].real) )
+                    """ #Chequeo            
+                    print("QCero",i,"=",Q_Ceros)
+                    #Chequeo """
+                    if Q_Ceros > self.Qmax:
+                        if self.N > 1:
+                            self.N-=1
+                        #Cheque que no se pueda hacer lo imposible que es realizar una aproximacion de orden menor a 1
+                        else:
+                            OK=True
+                            print("No se puedo realizar una aproximacion con el Q pedido")
+                    if  (i+1) == len(Polos) :
+                        OK= True               
+            else:
+                OK=True
+            #Reseteo la constante para el proximo calculo
+            if OK != True:
+                self.Const=1
         '''Devolvemos el valor de forma tal que el primer numero del arreglo de los 
         cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
         del primer elemento al ultimo'''
-         #Chequeo
+        #Chequeo
+        print("Los numeradoes son",Num*self.Const)
+        print("Los denominadores son",Den)
         for i in range(len(Polos)):                
-            print("QPolo",i,"=",Q_Polos[i])
+            print("Polo",i,"=",Polos[i])
         for i in range(len(Ceros)):
-            print("QCero",i,"=",Q_Ceros[i])
-        print("Valor del flag",OK)
+            print("Cero",i,"=",Ceros[i])
+            print("La constante es",self.Const)
+        print("El orden es de",self.N)
+        #Chequeo
+        
         #return Num,Den
 
 
 def main():
     Aprox=AproximadorFiltro()
-    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,0.5,0,0,0)
+    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
     Aprox.Aproximacion()
 #Es necesario para poder ejecutar una funcion dentro del archivo
 if __name__ == "__main__":
