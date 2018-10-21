@@ -13,7 +13,6 @@ def singularidades(vec):
             PZ.imag = vec[k].imag
             PZ.sel = 0
             PZ.loadData()
-            print("entre")
             PZ_list.append(PZ)
 
     return PZ_list
