@@ -8,9 +8,9 @@ import scipy
 import numpy
 
 class AproximadorFiltro:
-    #Defino el constructor de la clase en el que creo las variables a usar
-    #def _init_(self):
-
+    #Defino un constructor que me ayude con chequeos
+    def __init__(self):
+        self.Retardo=0
     #Le damos los datos necesarios para la aproximacion
     def Datos(self,Tipo,Ap,As,Wp,Ws,Wp_mas=0,Ws_mas=0,Porcentaje=0,Qmax=0,N=0,Nmin=0,Nmax=0):
         self.Tipo=Tipo
@@ -23,9 +23,19 @@ class AproximadorFiltro:
         self.Qmax=Qmax
         self.N=N
         self.Nmin=Nmin
-        self.Nmax=Nmax
+        self.Nmax=Nmax 
         self.Porcentaje=Porcentaje
         self.Const=1
+    #Datos para una funcion que use retardo de grupo
+    def DatosRetard(self,Tipo,Retardo,Wrg,Tol,Qmax=0,N=0,Nmin=0,Nmax=15):
+        self.Tipo=Tipo
+        self.Retardo=Retardo
+        self.Wrg=Wrg
+        self.Tol=Tol
+        self.Qmax=Qmax
+        self.N=N
+        self.Nmin=Nmin
+        self.Nmax=Nmax
     #Se encarga de realizar la aproximacion dado los datos recibidos
     def Aproximacion(self):
         #Variables a utilizar
@@ -34,7 +44,9 @@ class AproximadorFiltro:
         OK=False
         self.Const=1
         #Primero garantizo el tipo de filtro que quiero
-        if self.Wp_mas == 0:
+        if self.Retardo != 0:
+            Filtro="retard"
+        elif self.Wp_mas == 0:
             if self.Wp < self.Ws:
                 Filtro="low-pass"
             else:
@@ -55,8 +67,6 @@ class AproximadorFiltro:
                 self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             elif self.Tipo=="Chebyshev II":
                 self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-            else:
-                print("Bessel")
             '''#Chequeo
             for i in range(len(Polos)):
                 print("Polo",i,"=",Polos[i])
