@@ -16,6 +16,7 @@ class AproximadorFiltro:
         self.Wp=1.2
         self.Ws_mas=0
         self.Wp_mas=0
+        self.Wrg=0
     #Le damos los datos necesarios para la aproximacion
     def Datos(self,Tipo,Ap,As,Wp,Ws,Wp_mas=0,Ws_mas=0,Porcentaje=0,Qmax=0,N=0,Nmin=0,Nmax=0):
         self.Tipo=Tipo
@@ -144,7 +145,7 @@ class AproximadorFiltro:
         cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
         del primer elemento al ultimo'''
         #Chequeo
-        print("Los numeradoes son",Num*self.Const)
+        print("Los numeradoes son",Num)
         print("Los denominadores son",Den)
         for i in range(len(Polos)):                
             print("Polo",i,"=",Polos[i])
@@ -159,8 +160,8 @@ class AproximadorFiltro:
 
 def main():
     Aprox=AproximadorFiltro()
-    #Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
-    Aprox.DatosRetard("Bessel",10e-03,600,0.20)
+    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
+    #Aprox.DatosRetard("Bessel",10e-03,600,0.20)
     Aprox.Aproximacion()
 #Es necesario para poder ejecutar una funcion dentro del archivo
 if __name__ == "__main__":
