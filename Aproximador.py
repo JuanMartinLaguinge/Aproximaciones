@@ -67,6 +67,8 @@ class AproximadorFiltro:
                 self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             elif self.Tipo=="Chebyshev II":
                 self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+            elif self.Tipo=="Bessel":
+                print("Bessel")
             '''#Chequeo
             for i in range(len(Polos)):
                 print("Polo",i,"=",Polos[i])
