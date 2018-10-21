@@ -1,7 +1,7 @@
 from math import *
 from sympy import *
 
-def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1):
+def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1,retardo=1):
     s = Symbol('s')
     num = 1
     den = 1
@@ -27,6 +27,8 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1):
         wo = sqrt(wp*wp_mas)
         B = (wp_mas - wp)/wo
         H_denor = H_nor.subs(s,1/(1/B * (s/wo + wo/s)))
+    elif(tipo == 'retard'):
+        H_denor = H_nor.subs(s,s*retardo)
 
     #############ya tenemos la funcion denormalizada##################
 

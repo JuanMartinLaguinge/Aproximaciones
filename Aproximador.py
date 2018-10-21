@@ -4,6 +4,7 @@ from desnormalizacion import desnormalizacion
 from Chebyshev import Chebyshev_Aprox
 from Chebyshev2 import Chebyshev2_Aprox
 from butterworth import butterworth
+from Bessel import AproxBessel
 import scipy
 import numpy
 
@@ -11,6 +12,10 @@ class AproximadorFiltro:
     #Defino un constructor que me ayude con chequeos
     def __init__(self):
         self.Retardo=0
+        self.Ws=1
+        self.Wp=1.2
+        self.Ws_mas=0
+        self.Wp_mas=0
     #Le damos los datos necesarios para la aproximacion
     def Datos(self,Tipo,Ap,As,Wp,Ws,Wp_mas=0,Ws_mas=0,Porcentaje=0,Qmax=0,N=0,Nmin=0,Nmax=0):
         self.Tipo=Tipo
@@ -25,6 +30,8 @@ class AproximadorFiltro:
         self.Nmin=Nmin
         self.Nmax=Nmax 
         self.Porcentaje=Porcentaje
+        #Cada vez que me dan los datos para filtros normales seteo el retraso en 0
+        self.Retardo=0
         self.Const=1
     #Datos para una funcion que use retardo de grupo
     def DatosRetard(self,Tipo,Retardo,Wrg,Tol,Qmax=0,N=0,Nmin=0,Nmax=15):
@@ -57,7 +64,10 @@ class AproximadorFiltro:
             else:
                 Filtro='band-stop'
         #Una vez que ya tengo el tipo de filtro procedo a normalizarlo
-        Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas)
+        if self.Retardo != 0:
+            Wrgn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas,self.Retardo,self.Wrg)
+        else:
+            Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas,self.Retardo,self.Wrg)
         #print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         while OK == False:
             if self.Tipo=="Butterworth":
@@ -68,7 +78,10 @@ class AproximadorFiltro:
             elif self.Tipo=="Chebyshev II":
                 self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             elif self.Tipo=="Bessel":
-                print("Bessel")
+                if self.Nmax==0:
+                    #Es un limite que le ponemos por predeterminado
+                    self.Nmax=15
+                self.N,Polos,self.Const=AproxBessel(self.Retardo,Wrgn,self.Tol,self.N,self.Nmin,self.Nmax)
             '''#Chequeo
             for i in range(len(Polos)):
                 print("Polo",i,"=",Polos[i])
@@ -76,7 +89,7 @@ class AproximadorFiltro:
                 print("Cero",i,"=",Ceros[i])
             print("La constante es",self.Const)'''
             #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
-            Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas)
+            Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas,self.Const,self.Retardo)
             if type(Num) != float:
                 for i in range(len(Num)):
                     Num[i]=Num[i]*self.Const
@@ -146,7 +159,8 @@ class AproximadorFiltro:
 
 def main():
     Aprox=AproximadorFiltro()
-    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
+    #Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
+    Aprox.DatosRetard("Bessel",10e-03,600,0.20)
     Aprox.Aproximacion()
 #Es necesario para poder ejecutar una funcion dentro del archivo
 if __name__ == "__main__":
