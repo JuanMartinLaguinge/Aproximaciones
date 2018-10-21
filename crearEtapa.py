@@ -2,19 +2,20 @@ from scipy import signal
 import classPZ
 import math
 import cmath
+import classEtapa
 
 def crearEtapa(polos,ceros):
 # a esta funcion le entras con una lista de polos y ceros y te arma la etapa
 # que la etapa seria una funcion transferencia
 # logicamente a lo sumo le vas a entrar con 2 ceros y 2 polos
 
+    stage = classEtapa.Etapa()
+
     if(len(polos) == 1):    # si solo se mando un polo
         if(polos[0].imag > 0):  # y tiene parte imaginaria mayor a 0, entonces es un par de polo conjugado
-            print('entre')
             wo = polos[0].mod
             zi = abs(polos[0].real)/wo
             q = 1/(2*zi)
-
             den = [1/(wo**2), 1/wo * 1/q, 1]
         else:               # si no tiene parte imaginaria es un solo polo simple
             den = [0, 1/abs(polos[0].real), 1]
@@ -39,4 +40,7 @@ def crearEtapa(polos,ceros):
     #print("numerador: ",num,"\ndenominador: ",den,"\n\n")
     H = signal.TransferFunction(num,den)
 
-    return H
+    stage.H = H
+    stage.loadData()
+
+    return stage
