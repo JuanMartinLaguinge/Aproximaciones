@@ -1,4 +1,4 @@
-import math
+iimport math
 import cmath
 
 class P_Z:
@@ -7,7 +7,9 @@ class P_Z:
     Q = 0
     fo = 0             
     sel = 0                 #un booleano que nos dice si la etapa esta seleccionada
+    mod = 0
 
     def loadData(self):
-        Q = math.sqrt(self.real**2 + self.imag**2)/(2*self.real)
-        fo = math.sqrt(self.real**2 + self.imag**2)/(2*math.pi)
+        self.Q = math.sqrt(self.real**2 + self.imag**2)/(2*self.real)
+        self.fo = math.sqrt(self.real**2 + self.imag**2)/(2*math.pi)
+        self.mod = math.sqrt(self.real**2 + self.imag**2)
