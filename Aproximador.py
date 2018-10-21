@@ -154,14 +154,14 @@ class AproximadorFiltro:
             print("La constante es",self.Const)
         print("El orden es de",self.N)
         #Chequeo
-        
+        #Devolvemos los polos en frecuencia para las Aproximaciones de plantilla y en radianes/segundo para bessel
         return Num,Den
 
 
 def main():
     Aprox=AproximadorFiltro()
-    Aprox.Datos("Chebyshev I",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
-    #Aprox.DatosRetard("Bessel",10e-03,600,0.20)
+    #Aprox.Datos("Butterworth",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
+    Aprox.DatosRetard("Bessel",10e-03,600,0.20)
     Aprox.Aproximacion()
 #Es necesario para poder ejecutar una funcion dentro del archivo
 if __name__ == "__main__":
