@@ -154,7 +154,7 @@ class AproximadorFiltro:
         print("El orden es de",self.N)
         #Chequeo
         
-        #return Num,Den
+        return Num,Den
 
 
 def main():
