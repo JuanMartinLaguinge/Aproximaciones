@@ -1,4 +1,5 @@
 import sympy
+import scipy
 
 #Se encarga de realizar el polinomio de Bessel de manera recursiva y solo es necesario darle el orden
 def PoliBessel (N):
@@ -20,7 +21,7 @@ def NormaBessel(Retardo,Wrg):
     return Wrgn
 
 '''Se encarga de devolver los coeficientes de la funcion tranferencia de Bessel
-Recibe el Retardo de grupo querido, la frecuencia a la cual el retardo de grupo
+Recibe el Retardo de grupo querido en segundos, la frecuencia a la cual el retardo de grupo
 debe superar una cierta tolerancia y la tolerancia es Porcentaje/100
 Por ultimo,el Nmax por predeterminado es 15 para evitar un fitro muy grande'''
 def AproxBessel(Retardo,Wrg,Tol,N=0,Nmin=0,Nmax=15):
@@ -44,14 +45,20 @@ def AproxBessel(Retardo,Wrg,Tol,N=0,Nmin=0,Nmax=15):
         #Chequeo para ver si estoy en el Nmax
         if N == Nmax:
             Polinomio = PoliBessel(N)
-            Tranferencia = Polinomio.subs(s,0)/Polinomio.subs(s,1j*Wn)
             print("Se alcanzo el limite")
         elif N == Nmin:
             print("Se alconzo el minimo")
     else:
         Polinomio = PoliBessel(N)
-        Tranferencia = Polinomio.subs(s,0)/Polinomio.subs(s,1j*Wn)
-    return N,Polinomio
+    #obtengo la funcion tranferencia
+    Tranferencia = Polinomio.subs(s,0)/Polinomio
+    #Busco los polos
+    Num,Den = sympy.fraction(Tranferencia)
+    Den_Coef=sympy.Poly(Den)
+    Den_Coef=Den_Coef.all_coeffs()
+    Polos=scipy.roots(Den_Coef)
+    #Devuelvo el orden, los polos y la constante
+    return N,Polos,Num
 
 def main():
     print(AproxBessel(10e-03,600,0.20,6,2,7))
