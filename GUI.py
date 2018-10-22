@@ -67,6 +67,16 @@ class Gui:
         self.fp1_val.place_forget()
         self.fs1.place_forget()
         self.fs1_val.place_forget()
+        self.n.place_forget()
+        self.n_val.place_forget()
+        self.nmin.place_forget()
+        self.nmin_val.place_forget()
+        self.nmax.place_forget()
+        self.nmax_val.place_forget()
+        self.qmax.place_forget()
+        self.qmax_val.place_forget()
+        self.rank.place_forget()
+        self.rank_val.place_forget()
         self.b_graph.place_forget()
         self.b_attenuation.place_forget()
         self.b_phase.place_forget()
@@ -77,7 +87,9 @@ class Gui:
         self.b_screen2.place_forget()
         self.zp.place_forget()
         self.zlist.place_forget()
+        self.zscroll.place_forget()
         self.plist.place_forget()
+        self.zscroll.place_forget()
         self.b_c_stage.place_forget()
         self.b_s_stages.place_forget()
 
@@ -99,6 +111,7 @@ class Gui:
                 k = 0
         self.zlist.insert(tk.END,"none")
         self.zlist.place(x=700,y=50)
+        self.zscroll.place(x=823, y=50)
         k = 1
         for i in range(len(self.plist_val)):
             if(self.plist_val[i].imag != 0):
@@ -114,6 +127,7 @@ class Gui:
                 k = 0
         self.plist.insert(tk.END,"none")
         self.plist.place(x=870,y=50)
+        self.pscroll.place(x=993, y=50)
 
     def update_screen(self): #coloca los botones, esta función se usa para actualizar la presencia de los botones de acurdo al paso y la página en el que el usuario esta. 
         self.forget_buttons()
@@ -137,28 +151,38 @@ class Gui:
             if(self.step > 1):
                 self.text3.place(x=700,y=165)
                 self.Ap.place(x=700,y=195)
-                self.Ap_val.place(x=735,y=195)
+                self.Ap_val.place(x=760,y=195)
                 self.As.place(x=700,y=225)
-                self.As_val.place(x=735,y=225)
-                self.b_graph.place(x=700,y=300)
+                self.As_val.place(x=760,y=225)
+                self.b_graph.place(x=700,y=350)
                 if(self.filter_type == "low pass" or self.filter_type == "high pass"):
-                    self.fp.configure(text = "fp = ")
+                    self.fp.configure(text = "fp(Hz) = ")
                     self.fp.place(x=850,y=195)
-                    self.fp_val.place(x=885,y=195)
-                    self.fs.configure(text = "fs = ")
+                    self.fp_val.place(x=920,y=195)
+                    self.fs.configure(text = "fs(Hz) = ")
                     self.fs.place(x=850,y=225)
-                    self.fs_val.place(x=885,y=225)
+                    self.fs_val.place(x=920,y=225)
                 if(self.filter_type == "band pass" or self.filter_type == "band stop"):
-                    self.fp.configure(text = "fp- = ")
+                    self.fp.configure(text = "fp-(Hz) = ")
                     self.fp.place(x=850,y=195)
-                    self.fp_val.place(x=889,y=195)
-                    self.fs.configure(text = "fs- = ")
+                    self.fp_val.place(x=920,y=195)
+                    self.fs.configure(text = "fs-(Hz) = ")
                     self.fs.place(x=850,y=225)
-                    self.fs_val.place(x=889,y=225)
-                    self.fp1.place(x=1003,y=195)
-                    self.fp1_val.place(x=1046,y=195)
-                    self.fs1.place(x=1003,y=225)
-                    self.fs1_val.place(x=1046,y=225)
+                    self.fs_val.place(x=920,y=225)
+                    self.fp1.place(x=1010,y=195)
+                    self.fp1_val.place(x=1072,y=195)
+                    self.fs1.place(x=1010,y=225)
+                    self.fs1_val.place(x=1072,y=225)
+                self.n.place(x=700,y=255)
+                self.n_val.place(x=760,y=255)
+                self.nmin.place(x=850,y=255)
+                self.nmin_val.place(x=920,y=255)
+                self.nmax.place(x=1010,y=255)
+                self.nmax_val.place(x=1072,y=255)
+                self.qmax.place(x=700,y=285)
+                self.qmax_val.place(x=760,y=285)
+                self.rank.place(x=850,y=285)
+                self.rank_val.place(x=920,y=285)
             if(self.step > 2):
                 self.b_attenuation.place(x=10, y=15)
                 self.b_phase.place(x=125, y=15)
@@ -177,7 +201,6 @@ class Gui:
             self.update_listboxes()
             self.b_c_stage.place(x=1050,y=50)
             self.b_s_stages.place(x=1050,y=108)
-            
 
     def plot_attenuation(self): #se plotea la atenuación en bode de la función transferencia junto con la plantilla.
         self.reset_button_color()
@@ -313,11 +336,31 @@ class Gui:
         self.update_screen()
 
     def start_graph(self): #se verifica que las especificaciones ingresas son validas y plotea la aproximación en atenuación junto con la plantilla.
+        if(self.filter_type != "band pass" and self.filter_type != "band stop"):
+            self.fp1_val.delete(0, tk.END)
+            self.fs1_val.delete(0, tk.END)
+        if(len(self.fp1_val.get()) == 0 and len(self.fs1_val.get()) == 0):
+            self.fp1_val.insert(0,"0")
+            self.fs1_val.insert(0,"0")
+        if(len(self.nmin_val.get()) == 0 and len(self.nmax_val.get()) == 0):
+            self.nmin_val.insert(0,"0")
+            self.nmax_val.insert(0,"0")
+        if(len(self.n_val.get()) == 0):
+            self.n_val.insert(0,"0")
+        if(len(self.qmax_val.get()) == 0):
+            self.qmax_val.insert(0,"0")
+        if(len(self.rank_val.get()) == 0):
+            self.rank_val.insert(0,"0")
         try: #se fija si alguna de las especificaciones está vacio o no es un número.
             float(self.Ap_val.get())
             float(self.As_val.get())
             float(self.fp_val.get())
             float(self.fs_val.get())
+            float(self.n_val.get())
+            float(self.nmin_val.get())
+            float(self.nmax_val.get())
+            float(self.qmax_val.get())
+            float(self.rank_val.get())
             if(self.filter_type == "band pass" or self.filter_type == "band stop"):
                 float(self.fp1_val.get())
                 float(self.fs1_val.get())
@@ -358,6 +401,26 @@ class Gui:
                 self.warning.configure(text="WARNING: Band Stop Filter: Be sure that... fp- < fs- < fs+ < fp+.")
                 self.warning.place(x=700,y=520)
                 return
+        if(float(self.n_val.get()) != 0 and float(self.nmin_val.get()) != 0 and float(self.nmax_val.get()) != 0):
+            self.warning.configure(text="WARNING: Especifications N, Nmin and Nmax can't be together.")
+            self.warning.place(x=700,y=520)
+            return
+        if(float(self.n_val.get()) != 0 and float(self.nmax_val.get()) != 0):
+            self.warning.configure(text="WARNING: Especifications N and Nmax can't be together.")
+            self.warning.place(x=700,y=520)
+            return
+        if(float(self.n_val.get()) != 0 and float(self.nmin_val.get()) != 0):
+            self.warning.configure(text="WARNING: Especifications N and Nmin can't be together.")
+            self.warning.place(x=700,y=520)
+            return
+        if(float(self.nmin_val.get()) == 0 and float(self.nmax_val.get()) != 0 ):
+            self.warning.configure(text="WARNING: Especifications Nmin and Nmax must be together.")
+            self.warning.place(x=700,y=520)
+            return
+        if(float(self.nmin_val.get()) != 0 and float(self.nmax_val.get()) == 0 ):
+            self.warning.configure(text="WARNING: Especifications Nmin and Nmax must be together.")
+            self.warning.place(x=700,y=520)
+            return
 
         #si todo esta bien en las especificaciones, se borra el mensaje de error y se completa el tercer paso.
         self.warning.place_forget()
@@ -366,12 +429,8 @@ class Gui:
         self.b_graph.configure(bg="olive drab")
         self.b_screen1.configure(bg="olive drab")
 
-        if(self.filter_type == "low pass" or self.filter_type == "high pass"):
-            self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, 0, 0)
-        if(self.filter_type == "band pass" or self.filter_type == "band stop"):
-            self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, float(self.fp1_val.get())*2*math.pi, float(self.fs1_val.get())*2*math.pi)
-        
-
+        self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, float(self.fp1_val.get())*2*math.pi, float(self.fs1_val.get())*2*math.pi,float(self.rank_val.get()),float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
+    
         num, den = self.approx_F.Aproximacion()
         numAux = []
         denAux = []
@@ -420,15 +479,25 @@ class Gui:
             self.warning.configure(text="WARNING: Select a valid item from the listboxes.")
             self.warning.place(x=700,y=520)
             return
-        if(self.zlist_val[self.zlist.curselection()[0]].sel == 1 or self.plist_val[self.plist.curselection()[0]].sel == 1):
-            self.warning.configure(text="WARNING: An used item was selected.")
-            self.warning.place(x=700,y=520)
-            return
+        if(self.zlist.curselection()[0] != len(self.zlist_val) and self.plist.curselection()[0] != len(self.plist_val)):
+            if(self.zlist_val[self.zlist.curselection()[0]].sel == 1 or self.plist_val[self.plist.curselection()[0]].sel == 1):
+                self.warning.configure(text="WARNING: An used item was selected.")
+                self.warning.place(x=700,y=520)
+                return
         self.warning.place_forget()
-        self.zlist_val[self.zlist.curselection()[0]].sel = 1
-        self.plist_val[self.plist.curselection()[0]].sel = 1
-        self.update_listboxes()
+        if(self.zlist.curselection()[0] != len(self.zlist_val)):
+            self.zlist_val[self.zlist.curselection()[0]].sel = 1
+        if(self.plist.curselection()[0] != len(self.plist_val)):
+            self.plist_val[self.plist.curselection()[0]].sel = 1
 
+        if(self.zlist.curselection()[0] == len(self.zlist_val)):
+            self.stage = crearEtapa([self.plist_val[self.plist.curselection()[0]]], [])
+        elif(self.plist.curselection()[0] == len(self.plist_val)):
+            self.stage = crearEtapa([], [self.zlist_val[self.zlist.curselection()[0]]])
+        else:
+            self.stage = crearEtapa([self.plist_val[self.plist.curselection()[0]]], [self.zlist_val[self.zlist.curselection()[0]]])
+        print(self.stage.H)
+        self.update_listboxes()
 
     def set_stages(self):
         print("hi")
@@ -455,23 +524,34 @@ class Gui:
         self.data_plt._tkcanvas.pack(padx = 2, pady = 2) #plotea el plot.
 
         self.approx_F = AproximadorFiltro()
+        self.stage = Etapa()
 
         self.text1 = tk.Label(window, font=("arial",10,"bold"), text="Choose a Filter:",bg="gray64")
         self.text2 = tk.Label(window, font=("arial",10,"bold"), text="Choose an Approximation:",bg="gray64")
         self.text3 = tk.Label(window, font=("arial",10,"bold"), text="Set the Specifications:",bg="gray64")
 
-        self.Ap = tk.Label(window, font=("arial",10), text="Ap = ",bg="gray64")
+        self.Ap = tk.Label(window, font=("arial",10), text="Ap(dB) = ",bg="gray64")
         self.fp = tk.Label(window, font=("arial",10), bg="gray64")
-        self.As = tk.Label(window, font=("arial",10), text="As = ",bg="gray64")
+        self.As = tk.Label(window, font=("arial",10), text="As(dB) = ",bg="gray64")
         self.fs = tk.Label(window, font=("arial",10), bg="gray64")
-        self.fp1 = tk.Label(window, font=("arial",10), text="fp+ = ",bg="gray64")
-        self.fs1 = tk.Label(window, font=("arial",10), text="fs+ = ",bg="gray64")
+        self.fp1 = tk.Label(window, font=("arial",10), text="fp+(Hz) = ",bg="gray64")
+        self.fs1 = tk.Label(window, font=("arial",10), text="fs+(Hz) = ",bg="gray64")
+        self.n = tk.Label(window, font=("arial",10), text="N = ",bg="gray64")
+        self.nmin = tk.Label(window, font=("arial",10), text="Nmin = ",bg="gray64")
+        self.nmax = tk.Label(window, font=("arial",10), text="Nmax = ",bg="gray64")
+        self.qmax = tk.Label(window, font=("arial",10), text="Qmax = ",bg="gray64")
+        self.rank = tk.Label(window, font=("arial",10), text="Rank(%) = ",bg="gray64")
         self.Ap_val = tk.Entry(window, width = 10)
         self.fp_val = tk.Entry(window, width = 10)
         self.fp1_val = tk.Entry(window, width = 10)
         self.As_val = tk.Entry(window, width = 10)
         self.fs_val = tk.Entry(window, width = 10)
         self.fs1_val = tk.Entry(window, width = 10)
+        self.n_val = tk.Entry(window, width = 10)
+        self.nmin_val = tk.Entry(window, width = 10)
+        self.nmax_val = tk.Entry(window, width = 10)
+        self.qmax_val = tk.Entry(window, width = 10)
+        self.rank_val = tk.Entry(window, width = 10)
         
         self.warning = tk.Label(window, font=("arial",10,"bold"),bg="gray64",fg="red")        
         
@@ -497,7 +577,11 @@ class Gui:
 
         self.zp = tk.Label(window, font=("arial",10,"bold"), text="Zeros\t\t\tpoles",bg="gray64")
         self.zlist = tk.Listbox(window, selectbackground="olive drab",width = 20,height=5,exportselection=0)
+        self.zscroll = tk.Scrollbar(window, orient="vertical",command=self.zlist.yview)
+        self.zlist.configure(yscrollcommand=self.zscroll.set)
         self.plist = tk.Listbox(window, selectbackground="olive drab",width = 20,height=5,exportselection=0)
+        self.pscroll = tk.Scrollbar(window, orient="vertical",command=self.plist.yview)
+        self.plist.configure(yscrollcommand=self.pscroll.set)
 
         self.b_c_stage = tk.Button(window,text="Set Up Stage",command=self.create_stage)
         self.b_s_stages = tk.Button(window,text="Automatic Set Up",command=self.set_stages)
