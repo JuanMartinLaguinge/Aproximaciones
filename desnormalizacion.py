@@ -1,7 +1,7 @@
 from math import *
 from sympy import *
 
-def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1,retardo=1):
+def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,retardo=1):
     s = Symbol('s')
     num = 1
     den = 1
@@ -13,7 +13,7 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1,retardo=1):
     den = expand(den).subs(I,0)
     H_nor = num/den
     k = H_nor.subs(s,0) #k es la constante que queda mutiplicando al H en formato normalizado
-    H_nor = H_nor/k*const     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
+    H_nor = H_nor/k     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
     if(tipo == 'low-pass'):
         H_denor = H_nor.subs(s,s/wp)
     elif(tipo == 'high-pass'):
