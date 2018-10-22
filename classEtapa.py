@@ -11,4 +11,4 @@ class Etapa:
     def loadData(self):
         if(len(self.H.poles) == 2):
             self.Q = abs(self.H.poles[0])/(2*self.H.poles[0].real())
-            self.fo = abs(self.H.poles[0])/(2*math.p
+            self.fo = abs(self.H.poles[0])/(2*math.pi)
