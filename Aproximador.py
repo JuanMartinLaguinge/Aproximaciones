@@ -90,7 +90,7 @@ class AproximadorFiltro:
                 print("Cero",i,"=",Ceros[i])
             print("La constante es",self.Const)'''
             #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
-            Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas,self.Const,self.Retardo)
+            Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas,self.Retardo)
             if type(Num) != float:
                 for i in range(len(Num)):
                     Num[i]=Num[i]*self.Const
