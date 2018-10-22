@@ -44,7 +44,7 @@ def Chebyshev2_CerosYPolos(N,e):
 def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
     if N ==0 :
         N=Chebyshev2_Order(As,Ap,Ws,Wp)
-        if Nmin !=0 & Nmax !=0:
+        if Nmin !=0 and Nmax !=0:
             if Nmin > N:
                 N=Nmin
             elif N > Nmax:
