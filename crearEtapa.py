@@ -1,34 +1,50 @@
 from scipy import signal
+import classPZ
 import math
 import cmath
+import classEtapa
 
-def crearEtapa(polos,ceros)
+def crearEtapa(polos,ceros):
 # a esta funcion le entras con una lista de polos y ceros y te arma la etapa
 # que la etapa seria una funcion transferencia
 # logicamente a lo sumo le vas a entrar con 2 ceros y 2 polos
 
-if(len(polos) == 1):    # si solo se mando un polo
-    if(im(polos) > 0):  # y tiene parte imaginaria mayor a 0, entonces es un par de polo conjugado
-        wo = abs(polos)
-        zi = math.cos(re(polos)/wo)
-        q = 1/(2*zi)
-        den = [1/(wo**2), 1/wo * 1/q, 1]
-    else:               # si no tiene parte imaginaria es un solo polo simple
-        den = [0, 1/polos, 1]
-elif(len(polos) == 2):  # de ultima el user mando 2 polos reales y distintos
-    den = [1/(polos[0]*polos[1]), 1/polos[0] + 1/polos[1], 1] # y matematicamente los coeficientes serian esos
+    stage = classEtapa.Etapa()
 
-if(len(ceros) == 1):
-    if(im(ceros) > 0):
-        wo = abs(ceros)
-        zi = math.cos(re(ceros)/wo)
-        q = 1/(2*zi)
-        num = [1/(wo**2), 1/wo * 1/q, 1]
-    else: 
-        num = [0, 1/polos, 1]
-elif(len(polos) == 2):
-    num = [1/(polos[0]*polos[1]), 1/polos[0] + 1/polos[1], 1]
+    if(len(polos) == 1):    # si solo se mando un polo
+        if(polos[0].imag > 0):  # y tiene parte imaginaria mayor a 0, entonces es un par de polo conjugado
+            print('entre')
+            wo = polos[0].mod
+            #print("wo : ",wo)
+            zi = abs(polos[0].real)/wo
+            #print("zi : ",zi)
+            q = 1/(2*zi)
+            #print("q : ",q)
+            den = [1/(wo**2), 1/wo * 1/q, 1]
+        else:               # si no tiene parte imaginaria es un solo polo simple
+            den = [0, 1/abs(polos[0].real), 1]
+    elif(len(polos) == 2):  # de ultima el user mando 2 polos reales y distintos
+        den = [1/(polos[0].real*polos[1].real), 1/polos[0].real + 1/polos[1].real, 1] # y matematicamente los coeficientes serian esos
+    elif(len(polos) == 0):
+        den = 1
 
-H = signal.TransferFunction(num,den)
+    if(len(ceros) == 1):
+        if(ceros[0].imag > 0):
+            wo = ceros[0].mod
+            zi = abs(ceros[0].real)/wo
+            q = 1/(2*zi)
+            num = [1/(wo**2), 1/wo * 1/q, 1]
+        else: 
+            num = [0, 1/abs(ceros[0].real), 1]
+    elif(len(ceros) == 2):
+        num = [1/(ceros[0].real*ceros[1].real), 1/ceros[0].real + 1/ceros[1].real, 1]
+    elif(len(ceros) == 0):
+        num = 1
 
-return H
+    #print("numerador: ",num,"\ndenominador: ",den,"\n\n")
+    H = signal.TransferFunction(num,den)
+
+    stage.H = H
+    stage.loadData()
+
+    return stage
