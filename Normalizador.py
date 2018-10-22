@@ -7,6 +7,7 @@ def Normalizacion(Tipo,Ws_menos,Wp_menos,Ws_mas=0,Wp_mas=0,Retardo=0,Wrg=0):
     'band-stop': ( (Wp_mas-Wp_menos) / (Ws_mas-Ws_menos) ),
     'retard': Retardo*Wrg}
     if( Ws_menos*Ws_mas != Wp_mas*Wp_menos ):
+        print("No se cumple la media logaritmica \nSe modificaran las frecuencias")
         if Tipo=='band-pass':
             Ws=Wp_mas*Wp_menos/Ws_mas
             if Ws_menos<Ws:
