@@ -1,3 +1,36 @@
+#TP4 Teoria de Cirucitos.
+
+#La GUI de este programa funciona a través de pasos. Es decir, a medida que el usuario va haciendo los pasos que se
+#le indica, el siguiente paso aparece.
+
+import math
+import matplotlib
+import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk as toolbar
+from matplotlib.figure import Figure
+import matplotlib.patches as patches #para plotear la plantilla en el plot.
+from scipy import signal
+from singularidades import singularidades as sing
+from Aproximador import AproximadorFiltro
+from crearEtapa import crearEtapa
+from classEtapa import Etapa
+
+class Gui:
+    def reset_button_color(self): #pone todos los botones en el color que simboliza como NO precionado.
+        if(self.step <= 1):
+            self.b_LP.configure(bg="light gray")
+            self.b_HP.configure(bg="light gray")
+            self.b_BP.configure(bg="light gray")
+            self.b_BS.configure(bg="light gray")
+        if(self.step <= 2):
+            self.b_butter.configure(bg="light gray")
+            self.b_cheby_I.configure(bg="light gray")
+            self.b_cheby_II.configure(bg="light gray")
+            self.b_bess.configure(bg="light gray")
+            self.b_graph.configure(bg="light gray")
+            self.b_graph.configure(bg="light gray")
+        if(self.step <= 3):
             self.b_attenuation.configure(bg="light gray")
             self.b_phase.configure(bg="light gray")
             self.b_zp.configure(bg="light gray")
