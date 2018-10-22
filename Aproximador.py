@@ -60,25 +60,25 @@ class AproximadorFiltro:
             else:
                 Filtro="high-pass"
         else:
-            if self.Wp < self.Ws:
+            if self.Wp_mas < self.Ws_mas:
                 Filtro="band-pass"
             else:
                 Filtro='band-stop'
         #Una vez que ya tengo el tipo de filtro procedo a normalizarlo
         if self.Retardo != 0:
-            Wrgn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas,self.Retardo,self.Wrg)
+            Wrgn=Normalizacion(Filtro,self.Ws,self.Wp,self.Ws_mas,self.Wp_mas,self.Retardo,self.Wrg)
         else:
-            Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Wp_mas,self.Ws_mas,self.Retardo,self.Wrg)
+            Wpn,Wsn=Normalizacion(Filtro,self.Ws,self.Wp,self.Ws_mas,self.Wp_mas,self.Retardo,self.Wrg)
         #print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         while OK == False:
-            if self.Tipo=="Butterworth":
+            if self.Tipo=="butterworth":
                 Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
                 self.Const=1
-            elif self.Tipo=="Chebyshev I":
+            elif self.Tipo=="chebyshev I":
                 self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-            elif self.Tipo=="Chebyshev II":
+            elif self.Tipo=="chebyshev II":
                 self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
-            elif self.Tipo=="Bessel":
+            elif self.Tipo=="bessel":
                 if self.Nmax==0:
                     #Es un limite que le ponemos por predeterminado
                     self.Nmax=15
@@ -145,24 +145,14 @@ class AproximadorFiltro:
         cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
         del primer elemento al ultimo'''
         #Chequeo
-        print("Los numeradoes son",Num)
-        print("Los denominadores son",Den)
-        for i in range(len(Polos)):                
-            print("Polo",i,"=",Polos[i])
-        for i in range(len(Ceros)):
-            print("Cero",i,"=",Ceros[i])
-            print("La constante es",self.Const)
-        print("El orden es de",self.N)
+        # print("Los numeradores son",Num)
+        # print("Los denominadores son",Den)
+        # for i in range(len(Polos)):                
+        #     print("Polo",i,"=",Polos[i])
+        # for i in range(len(Ceros)):
+        #     print("Cero",i,"=",Ceros[i])
+        #     print("La constante es",self.Const)
+        # print("El orden es de",self.N)
         #Chequeo
         #Devolvemos los polos en frecuencia para las Aproximaciones de plantilla y en radianes/segundo para bessel
         return Num,Den
-
-
-def main():
-    Aprox=AproximadorFiltro()
-    #Aprox.Datos("Butterworth",2,4,1e03,1.2e03,0,0,0,1.8,0,0,0)
-    Aprox.DatosRetard("Bessel",10e-03,600,0.20)
-    Aprox.Aproximacion()
-#Es necesario para poder ejecutar una funcion dentro del archivo
-if __name__ == "__main__":
-    main()
