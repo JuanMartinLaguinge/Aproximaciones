@@ -1,34 +1,3 @@
-#TP4 Teoria de Cirucitos.
-
-#La GUI de este programa funciona a través de pasos. Es decir, a medida que el usuario va haciendo los pasos que se
-#le indica, el siguiente paso aparece.
-
-import math
-import matplotlib
-import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.backends._backend_tk import NavigationToolbar2Tk as toolbar
-from matplotlib.figure import Figure
-import matplotlib.patches as patches #para plotear la plantilla en el plot.
-from scipy import signal
-from singularidades import singularidades as sing
-from Aproximador import AproximadorFiltro
-
-class Gui:
-    def reset_button_color(self): #pone todos los botones en el color que simboliza como NO precionado.
-        if(self.step <= 1):
-            self.b_LP.configure(bg="light gray")
-            self.b_HP.configure(bg="light gray")
-            self.b_BP.configure(bg="light gray")
-            self.b_BS.configure(bg="light gray")
-        if(self.step <= 2):
-            self.b_butter.configure(bg="light gray")
-            self.b_cheby_I.configure(bg="light gray")
-            self.b_cheby_II.configure(bg="light gray")
-            self.b_bess.configure(bg="light gray")
-            self.b_graph.configure(bg="light gray")
-            self.b_graph.configure(bg="light gray")
-        if(self.step <= 3):
             self.b_attenuation.configure(bg="light gray")
             self.b_phase.configure(bg="light gray")
             self.b_zp.configure(bg="light gray")
@@ -365,15 +334,26 @@ class Gui:
         self.b_screen1.configure(bg="olive drab")
 
         if(self.filter_type == "low pass" or self.filter_type == "high pass"):
-            self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi)
+            self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, 0, 0)
+        if(self.filter_type == "band pass" or self.filter_type == "band stop"):
+            self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, float(self.fp1_val.get())*2*math.pi, float(self.fs1_val.get())*2*math.pi)
         
+
         num, den = self.approx_F.Aproximacion()
-        print("\n\n\n",num,"\n\n\n",den,"\n\n\n")
-        print(type(num),type(den),"\n\n\n")
-        print(type([1,2,3]))
-        num = 1.002377
-        den = [4.0314418*10**-9, 5.0700715*10**-6, 0.00318814, 1.002377]
-        self.H = signal.TransferFunction(num, den)
+        numAux = []
+        denAux = []
+        if(type(num) != float):
+            for k in range(len(num)):
+                numAux.append(float(num[k]))
+        else:
+            numAux.append(num)
+        if(type(den) != float):
+            for k in range(len(den)):
+                denAux.append(float(den[k]))
+        else:
+            denAux.append(den)
+
+        self.H = signal.TransferFunction(numAux, denAux)
         w, self.mag, self.phase = signal.bode(self.H) #el w está en rad/seg.
         self.f = w/(2*math.pi) #convierto a Hz.
         self.stepT, self.stepMag = signal.step(self.H)
@@ -415,6 +395,7 @@ class Gui:
         self.zlist_val[self.zlist.curselection()[0]].sel = 1
         self.plist_val[self.plist.curselection()[0]].sel = 1
         self.update_listboxes()
+
 
     def set_stages(self):
         print("hi")
