@@ -21,7 +21,7 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,const = 1,retardo=1):
     elif(tipo == 'band-pass'):
         wo = sqrt(wp*wp_mas)
         B = (wp_mas - wp)/wo
-        print("wo = ",wo,"\nB = ",B)
+        # print("wo = ",wo,"\nB = ",B)
         H_denor = H_nor.subs(s,1/B * (s/wo + wo/s))
     elif(tipo == 'band-stop'):
         wo = sqrt(wp*wp_mas)
