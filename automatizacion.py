@@ -67,7 +67,7 @@ def automatizacion(ceros,polos):
                 ceros[micero].sel = True
                 Zlist.append(ceros[micero])
 
-        stage.H = crearEtapa.crearEtapa(Plist,Zlist)
+        stage = crearEtapa.crearEtapa(Plist,Zlist)
         stageList.append(stage)
 
     return stageList
@@ -88,4 +88,3 @@ def allSelected(arreglo):
 def clearSel(arreglo):
     for k in range(len(arreglo)):
         arreglo[k].sel = 0
-        
