@@ -10,6 +10,9 @@ class P_Z:
     mod = 0
 
     def loadData(self):
-        self.Q = math.sqrt(self.real**2 + self.imag**2)/(2*self.real)
-        self.fo = math.sqrt(self.real**2 + self.imag**2)/(2*math.pi)
-        self.mod = math.sqrt(self.real**2 + self.imag**2)
+        if(self.real == 0 and self.imag == 0):
+            Q = 0
+        else:
+            self.Q = round(math.sqrt(self.real**2 + self.imag**2)/abs(2*self.real),3)
+            self.fo = round(math.sqrt(self.real**2 + self.imag**2)/(2*math.pi),3)
+            self.mod = math.sqrt(self.real**2 + self.imag**2)
