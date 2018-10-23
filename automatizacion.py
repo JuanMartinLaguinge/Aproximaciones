@@ -13,10 +13,8 @@ def automatizacion(ceros,polos):
     clearSel(polos)
     stageList = []
     stageClass = classEtapa.Etapa()
-    #print("entre a la funcion")
     
     while (not allSelected(ceros) and not allSelected(polos)):
-        #print("entre al while")
         Zlist = []
         Plist = []
         aux = stageClass.__class__
@@ -38,7 +36,7 @@ def automatizacion(ceros,polos):
             Qo = 0                                #inicializo con un valor de Q
             for k in range (len(ceros)):
                 if(ceros[k].sel == False):          #si el cero todavia no fue seleccionado
-                    if(ceros[k].Q > Qo):            #quiero el cero que tenga el mayor Q
+                    if(ceros[k].Q >= Qo):            #quiero el cero que tenga el mayor Q
                         micero = k
                         Qo = ceros[k].Q
 
@@ -48,19 +46,19 @@ def automatizacion(ceros,polos):
         if(polos[mipolo].imag == 0 and not allSelected(polos)):            #agarre uno simple, voy a agarrar otro para hacerlo de orden 2
             Qo = math.inf                          
             for k in range (len(polos)):
-                if(polos[k].sel == False):         
+                if(polos[k].sel == False and polos[k].imag == 0):
                     if(polos[k].Q < Qo):           
                         mipolo = k
                         Qo = polos[k].Q
-            
-            polos[mipolo].sel = True     
-            Plist.append(polos[mipolo])
+                    polos[mipolo].sel = True     
+                    Plist.append(polos[mipolo])
 
         if(not allSelected(ceros) and len(ceros) > 0):      # no junto todo dentro de un solo if porque 
             if(ceros[micero].imag == 0):                    # 'micero' puede no estar definido
+                Qo = 0
                 for k in range (len(ceros)):
-                    if(ceros[k].sel == False):          
-                        if(ceros[k].Q > Qo):            
+                    if(ceros[k].sel == False and ceros[k].imag == 0):          
+                        if(ceros[k].Q >= Qo):            
                             micero = k
                             Qo = ceros[k].Q
 
@@ -68,14 +66,14 @@ def automatizacion(ceros,polos):
                 Zlist.append(ceros[micero])
 
         stage = crearEtapa.crearEtapa(Plist,Zlist)
+        stage.loadData()
         stageList.append(stage)
-
+    for k in range(len(stageList)):
     return stageList
 
     
 
 def allSelected(arreglo):
-    #print("entre al allselected")
     if(len(arreglo) == 0):              #si la lista de ceros o polos no tiene nada devuelvo 0
         ret = False
     else:
