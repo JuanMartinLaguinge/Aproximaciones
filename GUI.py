@@ -19,7 +19,7 @@ from automatizacion import automatizacion as auto
 from acumulative import acumulative as acum_bode
 
 class Gui:
-    def reset_button_color(self): #pone todos los botones en el color que simboliza como NO precionado.
+    def reset_button_color(self): #pone todos los botones en el color que simboliza como NO precionado (gris).
         if(self.step <= 1):
             self.b_LP.configure(bg="light gray")
             self.b_HP.configure(bg="light gray")
@@ -50,7 +50,7 @@ class Gui:
             self.b_data.configure(bg="light gray")
             self.b_delete.configure(bg="light gray")
 
-    def clear_screen(self): #deja de mostrar todos los botones en pantalla.
+    def clear_screen(self): #limpia la pantalla eliminando botones, labels, listboxes, etc.
         self.text1.place_forget()
         self.b_LP.place_forget()
         self.b_HP.place_forget()
@@ -113,12 +113,16 @@ class Gui:
         self.b_sts_attenuation.place_forget()
         self.b_data.place_forget()
         self.b_delete.place_forget()
+        self.st_data.place_forget()
+        self.data.place_forget()
 
-    def update_zp_listboxes(self):
+    def update_zp_listboxes(self): #actualiza los listboxes de los ceros y polos.
+        #primero se limpian las listas
         self.zlist.delete(0,tk.END)
         self.plist.delete(0,tk.END)
         self.stage_z_str.clear()
         self.stage_p_str.clear()
+        #luego se las rellena con los datos actualizados.
         k = 1
         for i in range(len(self.zlist_val)):
             if(self.zlist_val[i].imag != 0):
@@ -152,12 +156,12 @@ class Gui:
                 k = 0
         self.plist.insert(tk.END,"none")
 
-    def update_state_listbox(self):
-        self.stlist.delete(0,tk.END)
+    def update_state_listbox(self): #actualiza el listbox de los estados que se van seleccionando.
+        self.stlist.delete(0,tk.END) #se borra el contenido viejo.
         for i in range(len(self.stage_list)):
-            self.stlist.insert(i,"Stage"+str(i+1)+" ("+str(self.stage_zp_str[i])+")")
+            self.stlist.insert(i,"Stage"+str(i+1)+" ("+str(self.stage_zp_str[i])+")") #se coloca el contenido nuevo.
 
-    def update_screen(self): #coloca los botones, esta función se usa para actualizar la presencia de los botones de acurdo al paso y la página en el que el usuario esta. 
+    def update_screen(self): #actualiza la pantalla mostrando los botones correspondientes al paso en el que el usuario se encuentra. 
         self.clear_screen()
         self.warning.place_forget()
         if(self.screen == 0):
@@ -428,6 +432,7 @@ class Gui:
             self.warning.configure(text="WARNING: Fill all the specifications with valid numbers.")
             self.warning.place(x=700,y=520)
             return
+        #se sigue testeando los datos ingresados por el usuario y si son erroneos, se muestra un WARNING.
         if(self.filter_type != "group delay"):
             if(float(self.Ap_val.get()) >= float(self.As_val.get())): #se fija si Ap >= AS.
                 self.warning.configure(text="WARNING: Be sure that... Ap < As.")
@@ -492,16 +497,18 @@ class Gui:
 
         print(self.filter_type)
 
+        #como las especificaciones del filtro retardo de grupo (group delay) son diferentes a las demás, se las separan.
         if(self.filter_type != "group delay"):
             self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, float(self.fp1_val.get())*2*math.pi, float(self.fs1_val.get())*2*math.pi,float(self.rank_val.get()),float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
         else:
-            self.approx_F.DatosRetard(self.approx_type, float(self.delay_val.get()), float(self.fgd_val.get())*2*math.pi, float(self.tol_val.get())/100, float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
+            self.approx_F.DatosRetard(self.approx_type, float(self.delay_val.get())/(10**6), float(self.fgd_val.get())*2*math.pi, float(self.tol_val.get())/100, float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
 
-        num, den = self.approx_F.Aproximacion()
+        num, den = self.approx_F.Aproximacion() #se realiza la aproximación
 
         numAux = []
         denAux = []
         
+        #se asegura que la lista num y den sean tipo float.
         if(type(num) != float):
             for k in range(len(num)):
                 numAux.append(float(num[k]))
@@ -513,24 +520,26 @@ class Gui:
         else:
             denAux.append(den)
 
-        self.H = signal.TransferFunction(numAux, denAux)
+        self.H = signal.TransferFunction(numAux, denAux) #se crea la función transferencia.
         w, self.mag, self.phase = signal.bode(self.H) #el w está en rad/seg.
         self.f = w/(2*math.pi) #convierto a Hz.
         self.stepT, self.stepMag = signal.step(self.H)
         self.impT, self.impMag = signal.impulse(self.H)
 
+        #se limpia (resetea) las listas.
         self.zlist_val.clear()
         self.plist_val.clear()
         self.stlist.delete(0,tk.END)
         self.stage_zp_str.clear()
         self.stage_list.clear()
 
+        #se obtienen los polos y ceros efectivos de la función transferencia y se actualizan los listboxes.
         self.zlist_val = sing(self.H.zeros)
         self.plist_val = sing(self.H.poles)
         self.update_zp_listboxes()
 
         self.plot_attenuation()
-        self.update_screen() #refrezca los botones para que aparezcan los botones para elegir la página y el plot que se desee.
+        self.update_screen() #refrezca la pantalla para que aparezcan los botones.
         
     def set_screen1(self): #actualiza la página para setear la página uno (donde estan las especificaciones y plots)
         if(self.screen != 0):
@@ -548,8 +557,8 @@ class Gui:
             self.b_screen2.configure(bg="olive drab")
             self.plot_zp()
 
-    def set_stage(self):
-        #self.stage_zp_str.clear()
+    def set_stage(self): #se crea una estapa con los polos y ceros seleccionados.
+        #se testea si hay algún error en la elección de polos y ceros.
         if(self.zlist.curselection() == () or self.plist.curselection() == ()):
             self.warning.configure(text="WARNING: Select a valid item from the listboxes.")
             self.warning.place(x=700,y=520)
@@ -568,6 +577,8 @@ class Gui:
                 self.warning.configure(text="WARNING: An used item can't be selected.")
                 self.warning.place(x=700,y=520)
                 return
+
+        #si todo esta bien, se borra el mensaje de error y se colocan como usados los polos y ceros selecionados.
         self.warning.place_forget()
         if(self.zlist.curselection()[0] != len(self.zlist_val)):
             self.zlist_val[self.zlist.curselection()[0]].sel = 1
@@ -589,22 +600,22 @@ class Gui:
         self.update_zp_listboxes()
         self.update_screen()
 
-    def set_stages(self):
+    def set_stages(self): #se crean las etapas que conforman el filtro automaticamente.
         self.stage_list.clear()
 
         self.stage_list = auto(self.zlist_val, self.plist_val)
         self.update_zp_listboxes()
 
+        #se limpian las listas.
         self.stage_z_str.clear()
         self.stage_p_str.clear()
         self.stage_zp_str.clear()
 
+        #se llenan las listas con los correspondientes datos.
         for j in range(len(self.stage_list)):
             print(len(self.zlist_val))
             k = 1
             for i in range(len(self.zlist_val)):
-                print(str(round(self.zlist_val[i].real,5)) + "==" + str(round(self.stage_list[j].H.zeros[0].real,5)))
-                print(str(round(self.zlist_val[i].imag,5)) + "==" + str(round(self.stage_list[j].H.zeros[0].imag,5)))
                 if(round(self.zlist_val[i].real,5) == round(self.stage_list[j].H.zeros[0].real,5)):
                     if(round(self.zlist_val[i].imag,5) == round(self.stage_list[j].H.zeros[0].imag,5)):
                         if(self.zlist_val[i].imag != 0):
@@ -612,13 +623,8 @@ class Gui:
                         else:
                             self.stage_z_str.append("z"+str(2*i+1))
                             k = 0
-                        print(str(self.stage_z_str[len(self.stage_z_str)-1]))
-            print("\n")
-            print(len(self.plist_val))
             k = 1
             for i in range(len(self.plist_val)):
-                print(str(round(self.plist_val[i].real,5)) + "==" + str(round(self.stage_list[j].H.poles[0].real,5)))
-                print(str(round(self.plist_val[i].imag,5)) + "==" + str(round(self.stage_list[j].H.poles[0].imag,5)))
                 if(round(self.plist_val[i].real,5) == round(self.stage_list[j].H.poles[0].real,5)):
                     if(round(self.plist_val[i].imag,5) == round(self.stage_list[j].H.poles[0].imag,5)):
                         if(self.plist_val[i].imag != 0):
@@ -626,7 +632,6 @@ class Gui:
                         else:
                             self.stage_p_str.append("p"+str(2*i+1))
                             k = 0
-                        print(str(self.stage_p_str[j]))
                         
                             
             if(len(self.stage_z_str) == 0):
@@ -635,12 +640,12 @@ class Gui:
                 self.stage_zp_str.append(str(self.stage_z_str[j]))
             else:
                 self.stage_zp_str.append(str(self.stage_z_str[j])+"/"+str(self.stage_p_str[j]))
-            print(str(self.stage_zp_str[len(self.stage_zp_str)-1])+str(" |"))
 
         self.update_state_listbox()
         self.update_screen()
             
-    def plot_stage_attenuation(self):
+    def plot_stage_attenuation(self): #plotea la atenuación de la etapa seleccionada.
+        #si no hay etapa seleccionada, WARNING.
         if(self.stlist.curselection() == ()):
             self.warning.configure(text="WARNING: No stage selected.")
             self.warning.place(x=700,y=520)
@@ -657,7 +662,7 @@ class Gui:
         self.plt.set_ylabel("Attenuation (dB)") #_{out} -> pone out en letra chica y abajo.
         self.data_plt.draw()
 
-    def plot_stages_attenuation(self):
+    def plot_stages_attenuation(self): #plotea la atenuación acumulada de las estapas que se encuentran en el listbox.
         self.reset_button_color()
         self.b_sts_attenuation.configure(bg="olive drab")
         self.plt.clear()
@@ -669,10 +674,20 @@ class Gui:
         self.plt.set_ylabel("Attenuation (dB)") #_{out} -> pone out en letra chica y abajo.
         self.data_plt.draw()
 
-    def show_state_data(self):
-        pass
+    def show_state_data(self): #se muestran algunos datos de interés de la etapa.
+        #si no hay etapa seleccionada, WARNING.
+        if(self.stlist.curselection() == ()):
+            self.warning.configure(text="WARNING: No stage selected.")
+            self.warning.place(x=700,y=520)
+            return
+        self.warning.place_forget()
+        self.st_data.configure(text="Stage"+str(self.stlist.curselection()[0]+1)+" Data")
+        self.data.configure(text="Q = "+str(round(self.stage_list[self.stlist.curselection()[0]].Q,3))+"\nfo = "+str(round(self.stage_list[self.stlist.curselection()[0]].fo,3)))
+        self.st_data.place(x=850,y=400)
+        self.data.place(x=850,y=420)
 
-    def delete_stage(self):
+    def delete_stage(self): #borra la estapa seleccionada.
+        #si no hay etapa seleccionada, WARNING.
         if(self.stlist.curselection() == ()):
             self.warning.configure(text="WARNING: No stage selected.")
             self.warning.place(x=700,y=520)
@@ -715,12 +730,12 @@ class Gui:
         self.data_plt._tkcanvas.pack(padx = 2, pady = 2) #plotea el plot.
 
         self.approx_F = AproximadorFiltro()
-        self.stage_list = []
+        self.stage_list = [] #la lista de las etapas
         self.stage_z_str = [] #representarán los ceros que contiene cada etapa.
         self.stage_p_str = [] #representarán los polos que contiene cada etapa.
         self.stage_zp_str = [] #representarán los zeros y polos que contiene cada etapa.
-        self.zlist_val = []
-        self.plist_val = []
+        self.zlist_val = [] #representarán los zeros del filtro.
+        self.plist_val = [] #representarán los polos del filtro.
 
         self.text1 = tk.Label(self.window, font=("arial",10,"bold"), text="Choose a Filter:",bg="gray64")
         self.text2 = tk.Label(self.window, font=("arial",10,"bold"), text="Choose an Approximation:",bg="gray64")
@@ -737,7 +752,7 @@ class Gui:
         self.nmax = tk.Label(self.window, font=("arial",10), text="Nmax = ",bg="gray64")
         self.qmax = tk.Label(self.window, font=("arial",10), text="Qmax = ",bg="gray64")
         self.rank = tk.Label(self.window, font=("arial",10), text="Rank(%) = ",bg="gray64")
-        self.delay = tk.Label(self.window, font=("arial",10), text="Delay(s) = ",bg="gray64")
+        self.delay = tk.Label(self.window, font=("arial",10), text="Del(us) = ",bg="gray64")
         self.fgd = tk.Label(self.window, font=("arial",10), text="fgd(Hz) = ",bg="gray64")
         self.tol = tk.Label(self.window, font=("arial",10), text="Tol(%) = ",bg="gray64")
         self.Ap_val = tk.Entry(self.window, width = 10)
@@ -797,6 +812,8 @@ class Gui:
         self.b_data = tk.Button(self.window,text="Stage Data",command=self.show_state_data)
         self.b_delete = tk.Button(self.window,text="Delete Stage",command=self.delete_stage)
 
+        self.st_data = tk.Label(self.window, font=("arial",10,"bold"),bg="gray64")
+        self.data = tk.Label(self.window, font=("arial",10),bg="gray64")
 
         self.reset_button_color()
         self.update_screen()
