@@ -83,12 +83,6 @@ class AproximadorFiltro:
                     #Es un limite que le ponemos por predeterminado
                     self.Nmax=15
                 self.N,Polos,self.Const=AproxBessel(self.Retardo,Wrgn,self.Tol,self.N,self.Nmin,self.Nmax)
-            '''#Chequeo
-            for i in range(len(Polos)):
-                print("Polo",i,"=",Polos[i])
-            for i in range(len(Ceros)):
-                print("Cero",i,"=",Ceros[i])
-            print("La constante es",self.Const)'''
             #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
             Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas,self.Retardo)
             if type(Num) != float:
@@ -108,9 +102,6 @@ class AproximadorFiltro:
             if self.Qmax != 0:
                 for i in range(len(Polos)):
                     Q_Polos= abs( Polos[i] ) / (2*(Polos[i].real) )
-                    #Chequeo            
-                    #print("QPolo",i,"=",Q_Polos)
-                    #Chequeo
                     if Q_Polos > self.Qmax :
                         if self.N > 1:
                             self.N=self.N-1
@@ -124,9 +115,6 @@ class AproximadorFiltro:
                         OK= True
                 for i in range(len(Ceros)):
                     Q_Ceros= abs( Ceros[i] ) / (2*(Ceros[i].real) )
-                    """ #Chequeo            
-                    print("QCero",i,"=",Q_Ceros)
-                    #Chequeo """
                     if Q_Ceros > self.Qmax:
                         if self.N > 1:
                             self.N-=1
@@ -144,17 +132,4 @@ class AproximadorFiltro:
         '''Devolvemos el valor de forma tal que el primer numero del arreglo de los 
         cocientes es el que tiene el mayor orden y van decreciendo a medida que uno lee 
         del primer elemento al ultimo'''
-        #Chequeo
-        # print("Los numeradores son",Num)
-        # print("Los denominadores son",Den)
-        # for i in range(len(Polos)):                
-        #     print("Polo",i,"=",Polos[i])
-        # for i in range(len(Ceros)):
-        #     print("Cero",i,"=",Ceros[i])
-        #     print("La constante es",self.Const)
-        # print("El orden es de",self.N)
-        #Chequeo
-        #Devolvemos los polos en frecuencia para las Aproximaciones de plantilla y en radianes/segundo para bessel
-        # print(Polos)
-        # print(Ceros)
         return Num,Den

@@ -68,7 +68,6 @@ def automatizacion(ceros,polos):
         stage = crearEtapa.crearEtapa(Plist,Zlist)
         stage.loadData()
         stageList.append(stage)
-    for k in range(len(stageList)):
     return stageList
 
     
