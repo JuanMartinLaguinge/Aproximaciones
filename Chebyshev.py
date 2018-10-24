@@ -8,12 +8,7 @@ def Chebyshev_Order(As,Ap,Ws,Wp):
     '''Con esto ya calculamos el valor del orden de la aproximacion 
     pero todavia tenemos que elegir el valor entero mayor o 
     igual al que ya tenemos'''
-    N_Temp=round(N_Order,0)
-    if N_Order < N_Temp:
-        N = int(N_Temp)
-    else:
-        N_Temp=N_Order-N_Temp
-        N= int(N_Order+1-N_Temp)
+    N=math.ceil(N_Order)
     return N
 #Se encarga de devolver los polos 
 def Chebyshev_Polos(N,e):
