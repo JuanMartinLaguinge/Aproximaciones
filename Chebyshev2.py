@@ -23,7 +23,6 @@ def Chebyshev2_Corrimiento(N,e,Ws,Wp,Ap,Porcentaje,polos,ceros):
     k = H_nor.subs(s,0) 
     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
     H_nor = H_nor/k
-    print(polos)
     #Creo el intervalo de W donde quiero que evalue
     for i in range(1, 1000000 ):
         W.append(0.01*Ws*i)   
