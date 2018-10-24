@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 import numpy as np
 
-def bodeSym(sym):
+def bodeSym(sym,W):
     # esta funcion recibe una ecuacion simbolica y te saca el bode
     s = Symbol('s')
     sym = simplify(sym)
@@ -26,6 +26,5 @@ def bodeSym(sym):
     d = np.array(den_coeffs).astype(np.float64)
 
     H = signal.TransferFunction(n,d)
-
-    w,mag,pha = signal.bode(H)
+    w,mag,pha = signal.bode(H,W)
     return w, mag
