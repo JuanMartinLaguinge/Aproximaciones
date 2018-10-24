@@ -6,6 +6,7 @@ import numpy as np
 
 def bodeSym(sym):
     # esta funcion recibe una ecuacion simbolica y te saca el bode
+    s = Symbol('s')
     sym = simplify(sym)
     num, den = fraction(sym)
     num = expand(num)
