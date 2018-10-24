@@ -77,7 +77,7 @@ class AproximadorFiltro:
             elif self.Tipo=="chebyshev I":
                 self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             elif self.Tipo=="chebyshev II":
-                self.N,Polos,Ceros,self.Const=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+                self.N,Polos,Ceros=Chebyshev2_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
             elif self.Tipo=="bessel":
                 if self.Nmax==0:
                     #Es un limite que le ponemos por predeterminado
@@ -109,7 +109,7 @@ class AproximadorFiltro:
                 for i in range(len(Polos)):
                     Q_Polos= abs( Polos[i] ) / (2*(Polos[i].real) )
                     #Chequeo            
-                    print("QPolo",i,"=",Q_Polos)
+                    #print("QPolo",i,"=",Q_Polos)
                     #Chequeo
                     if Q_Polos > self.Qmax :
                         if self.N > 1:
@@ -155,4 +155,6 @@ class AproximadorFiltro:
         # print("El orden es de",self.N)
         #Chequeo
         #Devolvemos los polos en frecuencia para las Aproximaciones de plantilla y en radianes/segundo para bessel
+        # print(Polos)
+        # print(Ceros)
         return Num,Den
