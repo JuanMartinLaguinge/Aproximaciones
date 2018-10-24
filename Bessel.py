@@ -1,5 +1,6 @@
 import sympy
 import scipy
+import math
 
 #Se encarga de realizar el polinomio de Bessel de manera recursiva y solo es necesario darle el orden
 def PoliBessel (N):
@@ -31,7 +32,7 @@ def AproxBessel(Retardo,Wrg,Tol,N=0,Nmin=0,Nmax=15):
             Tranferencia = Polinomio.subs(s,0)/Polinomio.subs(s,1j*Wrg)
             Temp= ( ( Wrg**(2*N) ) * (abs(Tranferencia)**2) )/ (Polinomio.subs(s,0)**2)
             if (Temp<Tol):
-                print(Temp)
+                print("Tolerancia",Temp)
                 break
             else:
                 N+=1
@@ -50,11 +51,14 @@ def AproxBessel(Retardo,Wrg,Tol,N=0,Nmin=0,Nmax=15):
     Den_Coef=sympy.Poly(Den)
     Den_Coef=Den_Coef.all_coeffs()
     Polos=scipy.roots(Den_Coef)
+    for i in range(len(Polos)):
+        Polos[i]=Polos[i]/(2*math.pi)
     #Devuelvo el orden, los polos y la constante
+    Num=1
     return N,Polos,Num
 
-def main():
-    print(AproxBessel(10e-03,600,0.20,6,2,7))
+#def main():
+#    print(AproxBessel(10e-03,600,0.20,6,2,7))
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
