@@ -1,24 +1,7 @@
 import math
 from scipy import signal
 import sympy
-
-# #Para tener una aproximacion mas exsacta del epsilon
-def Chebyshev2Tn(N):
-    s=sympy.Symbol('s')
-    T0=0
-    T1=s
-    if N==0:
-        return T0
-    elif N==1:
-        return T1
-    else:
-        return 2*s*Chebyshev2Tn(N-1)-Chebyshev2Tn(N-2)
-#Evaluacion del Tn
-def EvalTn(N,Ws,W):
-    s=sympy.Symbol('s')
-    Tn=Chebyshev2Tn(N)
-    Tn=Tn.subs(s,Ws/W)
-    return Tn
+from bodeSym import bodeSym
 
 def Chebyshev2_Corrimiento(N,e,Ws,Wp,Ap,Porcentaje,polos,ceros):
     #Normalizo para Ws
@@ -27,43 +10,37 @@ def Chebyshev2_Corrimiento(N,e,Ws,Wp,Ap,Porcentaje,polos,ceros):
     for i in range(len(ceros)):
         ceros[i]*=Ws  
     #Luego busco el Wp de este
+    W=[]
     num=1
     den=1
     s=sympy.Symbol('s')
     for k in range (0,len(ceros)):
-        num = num*(s-ceros[k])  #tenemos el numerador de la funcion transf norm
+        num = num*(s-ceros[k])  
     for k in range (0,len(polos)):
-        den = den*(s-polos[k])  #tenemos el denominador de la funcion transf norm
+        den = den*(s-polos[k]) 
     H_nor = num/den
-    k = H_nor.subs(s,0) #k es la constante que queda mutiplicando al H en formato normalizado
-    H_nor = H_nor/k     #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
-    #Tn=Chebyshev2Tn(N)
-    #Tn=Tn.subs(s,-1j*Ws/s)
-    #HCuad=1-(1/(1+(e**2)*(Tn**2)))
-    #k=HCuad.subs(s,0)
-    #HCuad=HCuad/k
+    #k es la constante que queda mutiplicando al H en formato normalizado
+    k = H_nor.subs(s,0) 
+    #al sacarle esa constante hacemos que la funcion no tenga ganancia constante
+    H_nor = H_nor/k
+    print(polos)
+    #Creo el intervalo de W donde quiero que evalue
+    for i in range(1, 1000000 ):
+        W.append(0.01*Ws*i)   
+    W,Mag=bodeSym(H_nor,W)
     #Cuando me pide al lado de Ws entonces no necesito hacer este calculo
     if Porcentaje!=100:
-        for i in range(10000,10000000000):
-            mag=(-20)*(math.log10(abs( H_nor.subs(s,0.0001j*i) ) ) )
-            if(mag > Ap):
-                w=0.0001*(i-1)
-                print(mag)
-                print("El W",w)
+        for i in range(len(Mag)):
+            Mag[i]=-Mag[i]
+            if(Mag[i] > Ap):
+                w=W[i-1]
                 break
     else:
         w=0
-    #Al realizar varias prubas esta apoximacion funciona para valores de Ws>w
-    #if Ws>w:
+    #Tengo que usar el Ws para el Wp que quiero para que luego no este pegado al As
     deltaW=Ws-w
     ExtraWs=Ws-(Wp+deltaW)
-    print(Ws,deltaW)
-    NuevoWs=Wp+deltaW+(Porcentaje/100)*ExtraWs
-    print(Ws)
-    #else:
-    #    deltaW=Ws-w
-    #    ExtraWs=Ws-(Wp+deltaW)
-    #    Ws=Wp+deltaW*(1-Porcentaje/100)
+    NuevoWs=Wp+deltaW+ExtraWs*(Porcentaje/100)
     for i in range(len(polos)):
         polos[i]*=NuevoWs/Ws
     for i in range(len(ceros)):
@@ -78,12 +55,7 @@ def Chebyshev2_Order(As,Ap,Ws,Wp):
     '''Con esto ya calculamos el valor del orden de la aproximacion 
     pero todavia tenemos que elegir el valor entero mayor o 
     igual al que ya tenemos'''
-    N_Temp=round(N_Order,0)
-    if N_Order < N_Temp:
-        N = int(N_Temp)
-    else:
-        N_Temp=N_Order-N_Temp
-        N= int(N_Order+1-N_Temp)
+    N=math.ceil(N_Order)
     return N
 
 #Se encontrar el epsilon
@@ -123,9 +95,7 @@ def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
                 N=Nmin
             elif N > Nmax:
                 N=Nmax 
-    #e1=Chebyshev2_Epsilon(Ap)/EvalTn(N,Wp,Ws)
     e=Chebyshev2_Epsilon(As)
-    #e=e1+( Porcentaje /100)*(e2-e1)
     P,Zeros=Chebyshev2_CerosYPolos(N,e,1)
     """ Ahora vamos a calcular la constante que se le multiplica 
     a la funcion tranferencia cuando la obtenemos por polos"""
