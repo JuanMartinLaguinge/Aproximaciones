@@ -13,8 +13,11 @@ def crearEtapa(polos,ceros):
     if(len(polos) == 1):    # si solo se mando un polo
         if(polos[0].imag > 0):  # y tiene parte imaginaria mayor a 0, entonces es un par de polo conjugado
             wo = polos[0].mod
+            #print("wo : ",wo)
             zi = abs(polos[0].real)/wo
+            #print("zi : ",zi)
             q = 1/(2*zi)
+            #print("q : ",q)
             den = [1/(wo**2), 1/wo * 1/q, 1]
         else:               # si no tiene parte imaginaria es un solo polo simple
             den = [0, 1/abs(polos[0].real), 1]
@@ -36,13 +39,14 @@ def crearEtapa(polos,ceros):
             num = [1,0,0]
         elif(ceros[0].Q == 0 and ceros[1].Q != 0):             
             num = [1,ceros[1],0]
-        elif(ceros[0].Q == 0 and ceros[1].Q != 0):             
+        elif(ceros[0].Q != 0 and ceros[1].Q == 0):             
             num = [1,ceros[0],0]
         else:
             num = [1/(ceros[0].real*ceros[1].real), 1/ceros[0].real + 1/ceros[1].real, 1]
     elif(len(ceros) == 0):
         num = 1
 
+    #print("numerador: ",num,"\ndenominador: ",den,"\n\n")
     H = signal.TransferFunction(num,den)
 
     stage.H = H
