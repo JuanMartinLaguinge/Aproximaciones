@@ -45,7 +45,7 @@ class AproximadorFiltro:
         self.Nmin=Nmin
         self.Nmax=Nmax
     #Se encarga de realizar la aproximacion dado los datos recibidos
-    def Aproximacion(self):
+    def Aproximacion(self,tipodeNorm):
         #Variables a utilizar
         Polos=[]
         Ceros=[]
@@ -72,7 +72,7 @@ class AproximadorFiltro:
         #print("Los valores normalizados son Wpn=",Wpn,"y Wsn=",Wsn,"para un filtro "+Filtro)
         while OK == False:
             if self.Tipo=="butterworth":
-                Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
+                self.N,Ceros,Polos=butterworth(self.Ap,self.As,Wpn,Wsn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
                 self.Const=1
             elif self.Tipo=="chebyshev I":
                 self.N,Polos,self.Const=Chebyshev_Aprox(self.As,self.Ap,Wsn,Wpn,self.N,self.Nmin,self.Nmax,self.Porcentaje)
@@ -84,6 +84,8 @@ class AproximadorFiltro:
                     self.Nmax=15
                 self.N,Polos,self.Const=AproxBessel(self.Retardo,Wrgn,self.Tol,self.N,self.Nmin,self.Nmax)
             #Ya tenemos la aproximacion normalizada solo falta desnormalizarla
+            if tipodeNorm != "desnormalizado":
+                Filtro='Normalizado' 
             Num,Den=desnormalizacion(Filtro,Ceros,Polos,self.Wp,self.Wp_mas,self.Retardo)
             if type(Num) != float:
                 for i in range(len(Num)):

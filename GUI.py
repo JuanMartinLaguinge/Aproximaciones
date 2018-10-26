@@ -544,7 +544,7 @@ class Gui:
         else:
             self.approx_F.DatosRetard(self.approx_type, float(self.delay_val.get())/(10**6), float(self.fgd_val.get())*2*math.pi, float(self.tol_val.get())/100, float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
 
-        num, den = self.approx_F.Aproximacion() #se realiza la aproximación
+        num, den = self.approx_F.Aproximacion("desnormalizado") #se realiza la aproximación y se le manda "desnormalizado" para el desnormalizado
 
         numAux = []
         denAux = []

@@ -28,6 +28,8 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,retardo=1):
         H_denor = H_nor.subs(s,1/(1/B * (s/wo + wo/s)))
     elif(tipo == 'retard'):
         H_denor = H_nor.subs(s,s*retardo)
+    else:
+        H_denor=H_nor
 
     #############ya tenemos la funcion denormalizada##################
 
