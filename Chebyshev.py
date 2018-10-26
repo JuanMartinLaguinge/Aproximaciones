@@ -18,7 +18,7 @@ def Chebyshev_Polos(N,e):
     for i in range(N):
         Polos_Re= round( Re_cte*math.sin( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) ,6)
         Polos_Im= round( Im_cte*math.cos( ( math.pi*(2*(i+1) -1) ) / ( 2*N ) ) ,6)
-        Polos.append(Polos_Re+1j*Polos_Im)
+        Polos.append(-Polos_Re+1j*Polos_Im)
     return Polos
 
 #Se encontrar el epsilon

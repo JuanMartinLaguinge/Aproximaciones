@@ -82,6 +82,7 @@ def Chebyshev2_CerosYPolos(N,e,Ws):
     for i in range(RangoZ):
         Zeros.append( Ws*1j*round (1/math.cos( (math.pi)*(2*i+1) / (2*N) ),6 ) )
         #Falta el Cero congujado
+    for i in range(RangoZ):    
         if (Zeros != 0):
             Zeros.append(Zeros[i].conjugate())
     return Polos,Zeros
@@ -103,8 +104,8 @@ def Chebyshev2_Aprox(As,Ap,Ws,Wp,N=0,Nmin=0,Nmax=0,Porcentaje=0):
         if(P[i].imag < 1e-10 and P[i].imag>0) or (P[i].imag > -1e-10 and P[i].imag<0):
             P[i]-=P[i].imag*1j
     for i in range(len(Zeros)):
-        if (Zeros[i].real< 1e-10 and Zeros[i].real>0) or (Zeros[i].real> -1e-10 and Zeros[i].real<0):
-            Zeros[i]=Zeros[i].imag*1j
+        # if (Zeros[i].real< 1e-10 and Zeros[i].real>0) or (Zeros[i].real> -1e-10 and Zeros[i].real<0):
+        Zeros[i]=Zeros[i].imag*1j
     #Me falta realizar el Porcentaje
     Zeros,P=Chebyshev2_Corrimiento(N,e,Ws,Wp,Ap,Porcentaje,P,Zeros)
     return N,P,Zeros

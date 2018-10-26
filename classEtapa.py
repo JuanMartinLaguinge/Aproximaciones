@@ -13,5 +13,5 @@ class Etapa:
         if(len(self.H.poles) == 2):
             self.Q = abs(self.H.poles[0])/(abs(2*self.H.poles[0].real))
             self.fo = abs(self.H.poles[0])/(2*math.pi)
-            w,mag,pha = signal.bode(H)
+            w,mag,pha = signal.bode(self.H)
             self.Gmax = 10**(max(mag)/20)

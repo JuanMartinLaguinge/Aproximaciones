@@ -14,7 +14,7 @@ def automatizacion(ceros,polos):
     stageList = []
     stageClass = classEtapa.Etapa()
     
-    while (not allSelected(ceros) and not allSelected(polos)):
+    while (not allSelected(ceros) or not allSelected(polos)):
         Zlist = []
         Plist = []
         aux = stageClass.__class__
@@ -25,10 +25,9 @@ def automatizacion(ceros,polos):
             Qo = math.inf                          #inicializo con un valor de Q
             for k in range (len(polos)):
                 if(polos[k].sel == False):          #si el polo todavia no fue seleccionado
-                    if(polos[k].Q < Qo):            #quiero el polo que tenga el menor Q
+                    if(polos[k].Q <= Qo):            #quiero el polo que tenga el menor Q
                         mipolo = k
                         Qo = polos[k].Q
-            
             polos[mipolo].sel = True                #tengo el polo de menor Q de los disponibles
             Plist.append(polos[mipolo])
 
@@ -44,7 +43,7 @@ def automatizacion(ceros,polos):
             Zlist.append(ceros[micero])
 
         if(polos[mipolo].imag == 0 and not allSelected(polos)):            #agarre uno simple, voy a agarrar otro para hacerlo de orden 2
-            Qo = math.inf                          
+            Qo = math.inf                      
             for k in range (len(polos)):
                 if(polos[k].sel == False and polos[k].imag == 0):
                     if(polos[k].Q < Qo):           
@@ -74,11 +73,11 @@ def automatizacion(ceros,polos):
 
 def allSelected(arreglo):
     if(len(arreglo) == 0):              #si la lista de ceros o polos no tiene nada devuelvo 0
-        ret = False
+        ret = True
     else:
         ret = True
         for k in range(len(arreglo)):
-            if(arreglo[k].sel == 0):
+            if(arreglo[k].sel == False):
                 ret = False
     return ret
 

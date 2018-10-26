@@ -23,11 +23,11 @@ def Normalizacion(Tipo,Ws_menos,Wp_menos,Ws_mas=0,Wp_mas=0,Retardo=0,Wrg=0):
             Wp=Ws_mas*Ws_menos/Wp_mas
             if Wp_menos<Wp:
                 Wp_menos=Wp
-                Nor[Tipo]=( (Ws_mas-Ws_menos) / (Wp_mas-Wp_menos) )
+                Nor[Tipo]=( (Wp_mas-Wp_menos) / (Ws_mas-Ws_menos) )
             Wp=Ws_mas*Ws_menos/Wp_menos
             if Wp_mas>Wp:
                 Wp_mas=Wp
-                Nor[Tipo]=( (Ws_mas-Ws_menos) / (Wp_mas-Wp_menos) )
+                Nor[Tipo]=( (Wp_mas-Wp_menos) / (Ws_mas-Ws_menos) )
             else:
                 print("Error:No se puedo realizar la simetria del Rechaza-banda")
     if Tipo != 'retard':

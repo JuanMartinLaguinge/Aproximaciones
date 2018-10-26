@@ -21,7 +21,6 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,retardo=1):
     elif(tipo == 'band-pass'):
         wo = sqrt(wp*wp_mas)
         B = (wp_mas - wp)/wo
-        # print("wo = ",wo,"\nB = ",B)
         H_denor = H_nor.subs(s,1/B * (s/wo + wo/s))
     elif(tipo == 'band-stop'):
         wo = sqrt(wp*wp_mas)
@@ -36,7 +35,6 @@ def desnormalizacion(tipo,ceros,polos,wp,wp_mas = 0,retardo=1):
     num,den = fraction(H_denor)
     num = expand(num)
     den = expand(den)
-    #print("numerador",num,"   denomunador ",den)
     if(num == num.subs(s,1234567890)):         #si n no tiene s cuando lo mandes al Poli de rompe
         num_coeffs = float(num)                #si se cumple eso en num no hay s
     else:

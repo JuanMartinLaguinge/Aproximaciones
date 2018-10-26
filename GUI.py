@@ -115,6 +115,8 @@ class Gui:
         self.b_delete.place_forget()
         self.st_data.place_forget()
         self.data.place_forget()
+        self.DR.place_forget()
+        self.order.place_forget()
 
     def update_zp_listboxes(self): #actualiza los listboxes de los ceros y polos.
         #primero se limpian las listas
@@ -128,15 +130,35 @@ class Gui:
             if(self.zlist_val[i].imag != 0):
                 self.stage_z_str.append("z"+str(2*i+k)+",z"+str(2*i+k+1))
                 if(self.zlist_val[i].sel == 0):
-                    self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q))
+                    if(self.zlist_val[i].Q < 0.5):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=nan")
+                    elif(self.zlist_val[i].Q > 10**6):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=+inf")
+                    else:
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q))
                 else:
-                    self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q)+" (used)")
+                    if(self.zlist_val[i].Q < 0.5):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=nan (used)")
+                    elif(self.zlist_val[i].Q > 10**6):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=+inf (used)")
+                    else:
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q)+" (used)")
             else:
                 self.stage_z_str.append("z"+str(2*i+1))
                 if(self.zlist_val[i].sel == 0):
-                    self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q))
+                    if(self.zlist_val[i].Q < 0.5):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=nan")
+                    elif(self.zlist_val[i].Q > 10**6):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=+inf")
+                    else:
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q))
                 else:
-                    self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q)+" (used)")
+                    if(self.zlist_val[i].Q < 0.5):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=nan (used)")
+                    elif(self.zlist_val[i].Q > 10**6):
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q=+inf (used)")
+                    else:
+                        self.zlist.insert(i,str(self.stage_z_str[i])+" f="+str(self.zlist_val[i].fo)+"Hz Q="+str(self.zlist_val[i].Q)+" (used)")
                 k = 0
         self.zlist.insert(tk.END,"none")
         k = 1
@@ -144,15 +166,35 @@ class Gui:
             if(self.plist_val[i].imag != 0):
                 self.stage_p_str.append("p"+str(2*i+k)+",p"+str(2*i+k+1))
                 if(self.plist_val[i].sel == 0):
-                    self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q))
+                    if(self.plist_val[i].Q < 0.5):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=nan")
+                    elif(self.plist_val[i].Q > 10**6):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=+inf")
+                    else:
+                        self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q))
                 else:
-                    self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q)+" (used)")
+                    if(self.plist_val[i].Q < 0.5):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=nan (used)")
+                    elif(self.plist_val[i].Q > 10**6):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=+inf (used)")
+                    else:
+                        self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q)+" (used)")
             else:
                 self.stage_p_str.append("p"+str(2*i+1))
                 if(self.plist_val[i].sel == 0):
-                    self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q))
+                    if(self.plist_val[i].Q < 0.5):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=nan")
+                    elif(self.plist_val[i].Q > 10**6):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=+inf")
+                    else:
+                        self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q))
                 else:
-                    self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q)+" (used)")
+                    if(self.plist_val[i].Q < 0.5):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=nan (used)")
+                    elif(self.plist_val[i].Q > 10**6):
+                        self.plist.insert(i,str(self.stage_z_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q=+inf (used)")
+                    else:
+                        self.plist.insert(i,str(self.stage_p_str[i])+" f="+str(self.plist_val[i].fo)+"Hz Q="+str(self.plist_val[i].Q)+" (used)")
                 k = 0
         self.plist.insert(tk.END,"none")
 
@@ -217,7 +259,7 @@ class Gui:
                     self.fgd_val.place(x=920,y=195)
                     self.tol.place(x=1010,y=195)
                     self.tol_val.place(x=1072,y=195)
-                self.b_graph.place(x=700,y=350)
+                self.b_graph.place(x=700,y=330)
                 self.n.place(x=700,y=255)
                 self.n_val.place(x=760,y=255)
                 self.nmin.place(x=850,y=255)
@@ -232,11 +274,12 @@ class Gui:
                 self.b_zp.place(x=208, y=15)
                 self.b_step.place(x=295, y=15)
                 self.b_impulse.place(x=385, y=15)
-                self.b_screen1.place(x=10, y=545)
-                self.b_screen2.place(x=125, y=545)
+                self.b_screen1.place(x=10, y=537)
+                self.b_screen2.place(x=80, y=537)
+                self.order.place(x=700,y=380)
         if(self.screen == 1 and self.step > 2):
-            self.b_screen1.place(x=10, y=545)
-            self.b_screen2.place(x=125, y=545)
+            self.b_screen1.place(x=10, y=537)
+            self.b_screen2.place(x=80, y=537)
             self.zp.place(x=700,y=15)
             self.b_zp.place(x=10, y=15)
             self.zlist.place(x=700,y=45)
@@ -495,8 +538,6 @@ class Gui:
         self.b_graph.configure(bg="olive drab")
         self.b_screen1.configure(bg="olive drab")
 
-        print(self.filter_type)
-
         #como las especificaciones del filtro retardo de grupo (group delay) son diferentes a las demás, se las separan.
         if(self.filter_type != "group delay"):
             self.approx_F.Datos(self.approx_type, float(self.Ap_val.get()), float(self.As_val.get()), float(self.fp_val.get())*2*math.pi, float(self.fs_val.get())*2*math.pi, float(self.fp1_val.get())*2*math.pi, float(self.fs1_val.get())*2*math.pi,float(self.rank_val.get()),float(self.qmax_val.get()),float(self.n_val.get()),float(self.nmin_val.get()),float(self.nmax_val.get()))
@@ -525,6 +566,8 @@ class Gui:
         self.f = w/(2*math.pi) #convierto a Hz.
         self.stepT, self.stepMag = signal.step(self.H)
         self.impT, self.impMag = signal.impulse(self.H)
+
+        self.order.config(text="Filter Order = "+str(self.approx_F.N))
 
         #se limpia (resetea) las listas.
         self.zlist_val.clear()
@@ -613,33 +656,37 @@ class Gui:
 
         #se llenan las listas con los correspondientes datos.
         for j in range(len(self.stage_list)):
-            print(len(self.zlist_val))
             k = 1
             for i in range(len(self.zlist_val)):
-                if(round(self.zlist_val[i].real,5) == round(self.stage_list[j].H.zeros[0].real,5)):
-                    if(round(self.zlist_val[i].imag,5) == round(self.stage_list[j].H.zeros[0].imag,5)):
-                        if(self.zlist_val[i].imag != 0):
-                            self.stage_z_str.append("z"+str(2*i+k)+",z"+str(2*i+k+1))
-                        else:
-                            self.stage_z_str.append("z"+str(2*i+1))
-                            k = 0
+                if(len(self.stage_list[j].H.zeros)):
+                    if(round(self.zlist_val[i].real,5) == round(self.stage_list[j].H.zeros[0].real,5)):
+                        if(round(self.zlist_val[i].imag,5) == round(self.stage_list[j].H.zeros[0].imag,5)):
+                            if(self.zlist_val[i].imag != 0):
+                                self.stage_z_str.append("z"+str(2*i+k)+",z"+str(2*i+k+1))
+                            else:
+                                self.stage_z_str.append("z"+str(2*i+1))
+                                k = 0
             k = 1
             for i in range(len(self.plist_val)):
-                if(round(self.plist_val[i].real,5) == round(self.stage_list[j].H.poles[0].real,5)):
-                    if(round(self.plist_val[i].imag,5) == round(self.stage_list[j].H.poles[0].imag,5)):
-                        if(self.plist_val[i].imag != 0):
-                            self.stage_p_str.append("p"+str(2*i+k)+",p"+str(2*i+k+1))
-                        else:
-                            self.stage_p_str.append("p"+str(2*i+1))
-                            k = 0
+                if(len(self.stage_list[j].H.poles)):
+                    if(round(self.plist_val[i].real,5) == round(self.stage_list[j].H.poles[0].real,5)):
+                        if(round(self.plist_val[i].imag,5) == round(self.stage_list[j].H.poles[0].imag,5)):
+                            if(self.plist_val[i].imag != 0):
+                                self.stage_p_str.append("p"+str(2*i+k)+",p"+str(2*i+k+1))
+                            else:
+                                self.stage_p_str.append("p"+str(2*i+1))
+                                k = 0
                         
                             
             if(len(self.stage_z_str) == 0):
-                self.stage_zp_str.append(str(self.stage_p_str[j]))
+                if(j < len(self.stage_p_str)):
+                    self.stage_zp_str.append(str(self.stage_p_str[j]))
             elif(len(self.stage_p_str) == 0):
-                self.stage_zp_str.append(str(self.stage_z_str[j]))
+                if(j < len(self.stage_p_str)):
+                    self.stage_zp_str.append(str(self.stage_z_str[j]))
             else:
-                self.stage_zp_str.append(str(self.stage_z_str[j])+"/"+str(self.stage_p_str[j]))
+                if(j < len(self.stage_z_str) and j < len(self.stage_p_str)):
+                    self.stage_zp_str.append(str(self.stage_z_str[j])+"/"+str(self.stage_p_str[j]))
 
         self.update_state_listbox()
         self.update_screen()
@@ -655,6 +702,7 @@ class Gui:
         self.b_st_attenuation.configure(bg="olive drab")
         self.plt.clear()
         w, mag, pha = signal.bode(self.stage_list[self.stlist.curselection()[0]].H)
+        mag = mag-max(mag)
         self.plt.semilogx(w/(2*math.pi),(-1)*mag)
         self.fig.suptitle("Stage"+str(self.stlist.curselection()[0]+1)+" Attenuation (Bode)")
         self.plt.grid(color="black",linestyle='-',linewidth=0.1)
@@ -682,9 +730,11 @@ class Gui:
             return
         self.warning.place_forget()
         self.st_data.configure(text="Stage"+str(self.stlist.curselection()[0]+1)+" Data")
-        self.data.configure(text="Q = "+str(round(self.stage_list[self.stlist.curselection()[0]].Q,3))+"\nfo = "+str(round(self.stage_list[self.stlist.curselection()[0]].fo,3)))
+        self.data.configure(text="Q = "+str(round(self.stage_list[self.stlist.curselection()[0]].Q,3))+"\nfo = "+str(round(self.stage_list[self.stlist.curselection()[0]].fo,3))+"Hz\nGmax = "+str(round(self.stage_list[self.stlist.curselection()[0]].Gmax,3)))
+        self.DR.configure(text="DR = 20log((Vsat/Gmax)/Vnoise)")
         self.st_data.place(x=850,y=400)
         self.data.place(x=850,y=420)
+        self.DR.place(x=850,y=470)
 
     def delete_stage(self): #borra la estapa seleccionada.
         #si no hay etapa seleccionada, WARNING.
@@ -694,13 +744,15 @@ class Gui:
             return
         self.warning.place_forget()
         for i in range(len(self.plist_val)):
-            if(round(self.plist_val[i].real,5) == round(self.stage_list[self.stlist.curselection()[0]].H.poles[0].real,5)):
-                if(round(self.plist_val[i].imag,5) == round(self.stage_list[self.stlist.curselection()[0]].H.poles[0].imag,5)):
-                    self.plist_val[i].sel = 0
+            if(len(self.stage_list[self.stlist.curselection()[0]].H.poles)):
+                if(round(self.plist_val[i].real,5) == round(self.stage_list[self.stlist.curselection()[0]].H.poles[0].real,5)):
+                    if(round(self.plist_val[i].imag,5) == round(self.stage_list[self.stlist.curselection()[0]].H.poles[0].imag,5)):
+                        self.plist_val[i].sel = 0
         for i in range(len(self.zlist_val)):
-            if(round(self.zlist_val[i].real,5) == round(self.stage_list[self.stlist.curselection()[0]].H.zeros[0].real,5)):
-                if(round(self.zlist_val[i].imag,5) == round(self.stage_list[self.stlist.curselection()[0]].H.zeros[0].imag,5)):
-                    self.zlist_val[i].sel = 0
+            if(len(self.stage_list[self.stlist.curselection()[0]].H.zeros)):
+                if(round(self.zlist_val[i].real,5) == round(self.stage_list[self.stlist.curselection()[0]].H.zeros[0].real,5)):
+                    if(round(self.zlist_val[i].imag,5) == round(self.stage_list[self.stlist.curselection()[0]].H.zeros[0].imag,5)):
+                        self.zlist_val[i].sel = 0
         self.stage_list.pop(self.stlist.curselection()[0])
         self.stage_zp_str.pop(self.stlist.curselection()[0])
         self.stlist.delete(self.stlist.curselection()[0])
@@ -728,6 +780,8 @@ class Gui:
         self.axes = self.fig.gca()
         self.data_plt = FigureCanvasTkAgg(self.fig, master=graph)
         self.data_plt._tkcanvas.pack(padx = 2, pady = 2) #plotea el plot.
+        nav = toolbar(self.data_plt, self.window)
+        nav.update()
 
         self.approx_F = AproximadorFiltro()
         self.stage_list = [] #la lista de las etapas
@@ -814,6 +868,8 @@ class Gui:
 
         self.st_data = tk.Label(self.window, font=("arial",10,"bold"),bg="gray64")
         self.data = tk.Label(self.window, font=("arial",10),bg="gray64")
+        self.DR = tk.Label(self.window, font=("arial",10),bg="gray64")
+        self.order = tk.Label(self.window, font=("arial",10),bg="gray64")
 
         self.reset_button_color()
         self.update_screen()
